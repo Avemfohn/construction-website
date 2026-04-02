@@ -2,6 +2,9 @@ from django.contrib import admin
 
 from .models import Announcement, FAQ, Project, ProjectImage, SiteSettings
 
+admin.site.site_header = "Ercan İnşaat"
+admin.site.site_title = "Ercan İnşaat"
+
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):

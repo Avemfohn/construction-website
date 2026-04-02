@@ -24,7 +24,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const project = await fetchJson<ProjectDetail>(`/api/projects/${slug}/`);
-  if (!project) return { title: "Project" };
+  if (!project) return { title: "Proje" };
   return { title: project.title, description: project.summary };
 }
 
@@ -52,10 +52,10 @@ export default async function ProjectDetailPage({
             href="/projects"
             className="text-xs font-medium uppercase tracking-[0.2em] text-gold-500/90 transition hover:text-gold-300"
           >
-            ← Projects
+            ← Projeler
           </Link>
           <p className="mt-6 text-xs font-medium uppercase tracking-[0.35em] text-anthracite-500">
-            {project.status === "ongoing" ? "Ongoing" : "Completed"}
+            {project.status === "ongoing" ? "Devam ediyor" : "Tamamlandı"}
             {project.location ? ` · ${project.location}` : ""}
           </p>
           <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-anthracite-50 sm:text-4xl md:text-5xl">

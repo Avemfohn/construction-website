@@ -5,8 +5,9 @@ import { FounderVideos } from "@/components/FounderVideos";
 import { FaqAccordion } from "@/components/FaqAccordion";
 
 export const metadata: Metadata = {
-  title: "Urban renewal",
-  description: "Kentsel dönüşüm — trust, process, and answers",
+  title: "Kentsel dönüşüm",
+  description:
+    "Ercan İnşaat — kentsel dönüşümde güven, süreç ve yanıtlar.",
 };
 
 type FaqRow = {
@@ -28,26 +29,26 @@ export default async function UrbanRenewalPage() {
           Kentsel dönüşüm
         </p>
         <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight text-anthracite-50 sm:text-4xl">
-          Urban renewal
+          Kentsel dönüşüm
         </h1>
         <p className="mt-4 text-sm leading-relaxed text-anthracite-400">
-          Straight answers on process, safety, and how we work with residents and
-          partners. Founder Q&amp;A videos below.
+          Süreç, güvenlik ve sakinlerle çalışma biçimimiz hakkında net yanıtlar.
+          Aşağıda kurucumuz Ayhan Ercan&apos;ın video soru-cevapları.
         </p>
 
         <FounderVideos />
 
         <section className="mt-16">
           <h2 className="font-display text-xl font-semibold text-anthracite-100">
-            Frequently asked questions
+            Sıkça sorulan sorular
           </h2>
           <p className="mt-2 text-sm text-anthracite-500">
-            Urban renewal focus
+            Kentsel dönüşüm odağı
           </p>
           {urban.length === 0 ? (
             <p className="mt-8 rounded-sm border border-navy-800/80 bg-navy-950/30 px-4 py-6 text-sm text-anthracite-500">
-              No FAQs in this section yet. Add entries in Django admin or run
-              seed data.
+              Bu bölümde henüz SSS yok. Django yönetiminden ekleyin veya örnek veri
+              komutunu çalıştırın.
             </p>
           ) : (
             <FaqAccordion items={urban} className="mt-8" />
@@ -57,7 +58,7 @@ export default async function UrbanRenewalPage() {
         {general.length > 0 ? (
           <section className="mt-16">
             <h2 className="font-display text-xl font-semibold text-anthracite-100">
-              General
+              Genel
             </h2>
             <FaqAccordion items={general} className="mt-8" />
           </section>

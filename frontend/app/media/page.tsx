@@ -4,8 +4,9 @@ import Image from "next/image";
 import { fetchJson } from "@/lib/api";
 
 export const metadata: Metadata = {
-  title: "Founder's corner",
-  description: "Site visits, greetings, and updates",
+  title: "Ayhan Ercan — medya",
+  description:
+    "Ercan İnşaat — Ayhan Ercan’dan şantiye notları, tebrikler ve duyurular.",
 };
 
 type Announcement = {
@@ -18,7 +19,7 @@ type Announcement = {
 
 function formatDate(iso: string) {
   try {
-    return new Date(iso).toLocaleDateString("en-GB", {
+    return new Date(iso).toLocaleDateString("tr-TR", {
       day: "numeric",
       month: "long",
       year: "numeric",
@@ -35,19 +36,19 @@ export default async function MediaPage() {
     <main className="min-h-screen bg-gradient-to-b from-navy-950 via-anthracite-950 to-anthracite-950 px-4 pb-24 pt-10 sm:px-6">
       <div className="mx-auto max-w-3xl">
         <p className="text-xs font-medium uppercase tracking-[0.35em] text-gold-400/90">
-          Media &amp; updates
+          Ercan İnşaat
         </p>
         <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight text-anthracite-50 sm:text-4xl">
-          The Founder&apos;s Corner
+          Ayhan Ercan
         </h1>
         <p className="mt-4 text-sm leading-relaxed text-anthracite-400">
-          Site visits, holiday greetings, and announcements — straight from the
-          field.
+          Şantiyeden notlar, tebrikler ve duyurular — kurucumuz Ayhan
+          Ercan&apos;dan.
         </p>
 
         {items.length === 0 ? (
           <p className="mt-12 rounded-sm border border-navy-800/80 bg-navy-950/30 px-4 py-6 text-sm text-anthracite-500">
-            No announcements yet. Create them in Django admin or via the API.
+            Henüz duyuru yok. Django yönetiminden veya API üzerinden ekleyebilirsiniz.
           </p>
         ) : (
           <ul className="mt-12 space-y-12">
@@ -57,13 +58,15 @@ export default async function MediaPage() {
                 className="overflow-hidden rounded-sm border border-navy-800/80 bg-anthracite-900/20 shadow-luxury"
               >
                 {post.image ? (
-                  <div className="relative aspect-[16/10] w-full sm:aspect-video">
+                  <div className="flex w-full justify-center bg-anthracite-950/50">
                     <Image
                       src={post.image}
-                      alt=""
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 48rem"
+                      alt={post.title}
+                      width={1600}
+                      height={1200}
+                      sizes="(max-width: 768px) 100vw, min(48rem, 100vw)"
+                      className="h-auto w-full max-h-[min(85vh,1100px)] object-contain"
+                      style={{ width: "100%", height: "auto" }}
                     />
                   </div>
                 ) : null}

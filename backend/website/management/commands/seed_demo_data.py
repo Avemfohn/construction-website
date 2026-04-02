@@ -4,19 +4,19 @@ from website.models import Announcement, FAQ, Project, ProjectImage
 
 
 class Command(BaseCommand):
-    help = "Seed demo Projects, ProjectImages, FAQs, and Announcements"
+    help = "Örnek proje, görsel, SSS ve duyuru verisi ekler"
 
     def handle(self, *args, **options):
         # Projects
         p1, _ = Project.objects.update_or_create(
             slug="bosphorus-residence",
             defaults={
-                "title": "Bosphorus Residence",
-                "summary": "Ultra-premium seafront living spaces.",
-                "description": "A high-end mixed-use complex with private amenities and structural safety at its core.",
+                "title": "Boğaz Residence",
+                "summary": "Denize sıfır, üst segment konut alanları.",
+                "description": "Özel olanaklar ve taşıyıcı güvenliği merkezde olan karma kullanımlı bir proje.",
                 "status": Project.Status.ONGOING,
-                "location": "Istanbul / Besiktas",
-                "features": ["Seismic-grade structure", "Private parking", "Concierge"],
+                "location": "İstanbul / Beşiktaş",
+                "features": ["Depreme dayanıklı taşıyıcı", "Özel otopark", "Concierge"],
                 "featured": True,
                 "sort_order": 1,
             },
@@ -25,22 +25,21 @@ class Command(BaseCommand):
         p2, _ = Project.objects.update_or_create(
             slug="golden-gate-villas",
             defaults={
-                "title": "Golden Gate Villas",
-                "summary": "Completed boutique villa collection.",
-                "description": "Completed development focused on privacy, luxury finishes, and engineering quality.",
+                "title": "Golden Gate Villaları",
+                "summary": "Tamamlanmış butik villa koleksiyonu.",
+                "description": "Mahremiyet, seçkin malzemeler ve mühendislik kalitesine odaklı tamamlanmış geliştirme.",
                 "status": Project.Status.COMPLETED,
-                "location": "Istanbul / Sariyer",
-                "features": ["Smart home", "Landscape terraces", "24/7 security"],
+                "location": "İstanbul / Sarıyer",
+                "features": ["Akıllı ev", "Peyzaj terasları", "7/24 güvenlik"],
                 "featured": False,
                 "sort_order": 2,
             },
         )
 
-        # Project image records (db-only placeholder file paths)
         demo_project_images = [
-            (p1, "Main facade", "projects/demo/bosphorus-1.png", 1),
-            (p1, "Lobby detail", "projects/demo/bosphorus-2.png", 2),
-            (p2, "Villa exterior", "projects/demo/golden-gate-1.png", 1),
+            (p1, "Ana cephe", "projects/demo/bosphorus-1.png", 1),
+            (p1, "Lobi detayı", "projects/demo/bosphorus-2.png", 2),
+            (p2, "Villa dış görünüm", "projects/demo/golden-gate-1.png", 1),
         ]
 
         for project, caption, image_path, sort_order in demo_project_images:
@@ -53,42 +52,40 @@ class Command(BaseCommand):
                 },
             )
 
-        # Announcements / media (db-only placeholder image path)
         Announcement.objects.update_or_create(
-            title="Founder Site Visit - Week 12",
+            title="Ayhan Ercan — şantiye notu (12. hafta)",
             defaults={
-                "body": "On-site progress update: core structure and facade systems are advancing as planned.",
+                "body": "Ercan İnşaat sahasında taşıyıcı sistem ve cephe ilerlemesi planlandığı gibi devam ediyor.",
                 "image": "announcements/demo/founder-site-visit.png",
                 "is_published": True,
             },
         )
 
         Announcement.objects.update_or_create(
-            title="Holiday Greeting",
+            title="Bayram tebriği",
             defaults={
-                "body": "We wish all our partners and clients health, prosperity, and safe homes.",
+                "body": "Ayhan Ercan ve Ercan İnşaat ailesi olarak ortaklarımıza ve müşterilerimize sağlık, bereket ve güvenli yuvalar dileriz.",
                 "is_published": True,
             },
         )
 
-        # FAQs
         faqs = [
             (
                 FAQ.Section.URBAN_RENEWAL,
-                "What is your urban renewal process?",
-                "We begin with structural assessment, legal planning, resident alignment, and phased execution with transparent milestones.",
+                "Kentsel dönüşüm süreciniz nasıl işliyor?",
+                "Statik değerlendirme, hukuki planlama, sakin uyumu ve şeffaf kilometre taşlarıyla aşamalı uygulama ile başlarız.",
                 1,
             ),
             (
                 FAQ.Section.URBAN_RENEWAL,
-                "How do you ensure safety during demolition and rebuild?",
-                "Certified teams, engineered protection plans, and municipality-compliant operations are mandatory at every stage.",
+                "Yıkım ve yeniden yapım sırasında güvenliği nasıl sağlıyorsunuz?",
+                "Sertifikalı ekipler, mühendislik koruma planları ve belediye uyumlu operasyonlar her aşamada zorunludur.",
                 2,
             ),
             (
                 FAQ.Section.GENERAL,
-                "Can I track project progress remotely?",
-                "Yes. We publish scheduled updates with photos and milestone summaries in the Founder\'s Corner.",
+                "Proje ilerlemesini uzaktan takip edebilir miyim?",
+                "Evet. Fotoğraflar ve kilometre taşı özetleriyle düzenli güncellemeleri Ayhan Ercan medya sayfasında paylaşıyoruz.",
                 1,
             ),
         ]
@@ -104,4 +101,4 @@ class Command(BaseCommand):
                 },
             )
 
-        self.stdout.write(self.style.SUCCESS("Demo data seeded successfully."))
+        self.stdout.write(self.style.SUCCESS("Örnek veri başarıyla eklendi."))

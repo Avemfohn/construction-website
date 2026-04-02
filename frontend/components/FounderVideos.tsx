@@ -1,6 +1,6 @@
 /**
- * YouTube embeds for founder Q&A. Set NEXT_PUBLIC_FOUNDER_YOUTUBE_IDS=id1,id2
- * (11-character video IDs). Empty → short helper message.
+ * Ayhan Ercan — YouTube soru-cevap gömüleri.
+ * NEXT_PUBLIC_FOUNDER_YOUTUBE_IDS=id1,id2 (11 karakterlik video kimlikleri).
  */
 export function FounderVideos() {
   const raw = process.env.NEXT_PUBLIC_FOUNDER_YOUTUBE_IDS?.trim();
@@ -13,22 +13,19 @@ export function FounderVideos() {
   return (
     <section className="mt-14">
       <h2 className="font-display text-xl font-semibold text-anthracite-100">
-        Founder Q&amp;A
+        Ayhan Ercan — soru &amp; cevap
       </h2>
       <p className="mt-2 text-sm text-anthracite-500">
-        Video answers from leadership — replace IDs via env when ready.
+        Kurucumuzdan video yanıtlar — kimlikleri ortam değişkeniyle ekleyin.
       </p>
 
       {ids.length === 0 ? (
         <div className="mt-6 rounded-sm border border-dashed border-gold-500/30 bg-navy-950/40 px-5 py-8 text-center text-sm text-anthracite-500">
           <p>
-            Add{" "}
-            <code className="text-gold-400/90">
-              NEXT_PUBLIC_FOUNDER_YOUTUBE_IDS
-            </code>{" "}
-            to{" "}
+            <code className="text-gold-400/90">NEXT_PUBLIC_FOUNDER_YOUTUBE_IDS</code>{" "}
+            değişkenini{" "}
             <code className="text-gold-400/90">frontend/.env.local</code>{" "}
-            (comma-separated YouTube video IDs).
+            dosyasına ekleyin (virgülle ayrılmış YouTube video kimlikleri).
           </p>
         </div>
       ) : (
@@ -40,7 +37,7 @@ export function FounderVideos() {
                   <iframe
                     className="h-full w-full"
                     src={`https://www.youtube.com/embed/${id}`}
-                    title="Founder Q&A"
+                    title="Ayhan Ercan — soru ve cevap"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                     loading="lazy"

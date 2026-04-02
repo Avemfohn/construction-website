@@ -63,10 +63,10 @@ export function ProjectGallery({
     <>
       <section className="mt-16">
         <h2 className="font-display text-xl font-semibold text-anthracite-100">
-          Gallery
+          Galeri
         </h2>
         <p className="mt-2 text-xs text-anthracite-500">
-          Tap an image to view full size
+          Tam boyut için görsele tıklayın
         </p>
         <ul className="mt-6 grid gap-6 sm:grid-cols-2">
           {images.map((img, index) => (
@@ -118,7 +118,7 @@ export function ProjectGallery({
           >
             <button
               type="button"
-              aria-label="Close gallery"
+              aria-label="Galeriyi kapat"
               className="absolute inset-0 bg-navy-950/88 backdrop-blur-sm"
               onClick={close}
             />
@@ -134,13 +134,13 @@ export function ProjectGallery({
                   onClick={close}
                   className="absolute -right-1 -top-12 z-[2] rounded-sm border border-anthracite-600/80 bg-anthracite-950/90 px-3 py-1.5 text-xs font-medium uppercase tracking-widest text-anthracite-200 transition hover:border-gold-500/50 hover:text-gold-200 sm:right-0 sm:top-0 sm:translate-y-[-120%]"
                 >
-                  Close
+                  Kapat
                 </button>
                 {images.length > 1 ? (
                   <>
                     <button
                       type="button"
-                      aria-label="Previous image"
+                      aria-label="Önceki görsel"
                       onClick={() => go(-1)}
                       className="absolute left-0 top-1/2 z-[2] -translate-x-1 translate-y-[-50%] rounded-sm border border-navy-700/90 bg-anthracite-950/80 p-3 text-anthracite-200 transition hover:border-gold-500/50 hover:text-gold-200 sm:-translate-x-4"
                     >
@@ -148,7 +148,7 @@ export function ProjectGallery({
                     </button>
                     <button
                       type="button"
-                      aria-label="Next image"
+                      aria-label="Sonraki görsel"
                       onClick={() => go(1)}
                       className="absolute right-0 top-1/2 z-[2] translate-x-1 translate-y-[-50%] rounded-sm border border-navy-700/90 bg-anthracite-950/80 p-3 text-anthracite-200 transition hover:border-gold-500/50 hover:text-gold-200 sm:translate-x-4"
                     >
@@ -185,8 +185,7 @@ export function ProjectGallery({
                       </p>
                     ) : (
                       <span id={labelId} className="sr-only">
-                        {title} — image {(openIndex ?? 0) + 1} of{" "}
-                        {images.length}
+                        {title} — görsel {(openIndex ?? 0) + 1} / {images.length}
                       </span>
                     )}
                   </motion.div>

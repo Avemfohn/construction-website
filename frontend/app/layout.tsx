@@ -6,20 +6,21 @@ import { SiteNav } from "@/components/SiteNav";
 import "./globals.css";
 
 const display = Playfair_Display({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-display",
   display: "swap",
 });
 
 const sans = Inter({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-sans",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Construction & Development",
-  description: "Premium construction and real estate development",
+  title: "Ercan İnşaat",
+  description:
+    "Ercan İnşaat — seçkin inşaat ve gayrimenkul geliştirme; kurucu Ayhan Ercan.",
 };
 
 export default function RootLayout({
@@ -29,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="tr"
       className={`${display.variable} ${sans.variable}`}
     >
       <body className="min-h-screen font-sans">

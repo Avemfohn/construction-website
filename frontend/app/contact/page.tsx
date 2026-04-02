@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact",
-  description: "Reach our team",
+  title: "İletişim",
+  description: "Ercan İnşaat — Ayhan Ercan ve ekiple iletişim.",
 };
 
 function instagramHref(handle: string): string {
@@ -14,47 +14,48 @@ export default function ContactPage() {
   const phone =
     process.env.NEXT_PUBLIC_CONTACT_PHONE || "+90 212 555 00 00";
   const tel = phone.replace(/\s+/g, "");
-  const igHandle = process.env.NEXT_PUBLIC_INSTAGRAM_HANDLE || "yourcompany";
+  const igHandle = process.env.NEXT_PUBLIC_INSTAGRAM_HANDLE || "ercaninsaat";
   const igUrl =
     process.env.NEXT_PUBLIC_INSTAGRAM_URL || instagramHref(igHandle);
 
   return (
     <main className="flex min-h-[calc(100vh-4.5rem)] flex-col items-center justify-center bg-gradient-to-b from-navy-950 via-anthracite-950 to-anthracite-950 px-6 py-20">
-        <div className="max-w-md text-center">
-          <p className="text-xs font-medium uppercase tracking-[0.35em] text-gold-400/90">
-            Contact
-          </p>
-          <h1 className="mt-4 font-display text-3xl font-semibold tracking-tight text-anthracite-50 sm:text-4xl">
-            Let&apos;s talk
-          </h1>
-          <p className="mt-4 text-sm leading-relaxed text-anthracite-400">
-            Prefer a direct line. Call us or follow updates on Instagram.
-          </p>
+      <div className="max-w-md text-center">
+        <p className="text-xs font-medium uppercase tracking-[0.35em] text-gold-400/90">
+          İletişim
+        </p>
+        <h1 className="mt-4 font-display text-3xl font-semibold tracking-tight text-anthracite-50 sm:text-4xl">
+          Bize ulaşın
+        </h1>
+        <p className="mt-4 text-sm leading-relaxed text-anthracite-400">
+          Ercan İnşaat — doğrudan hat için arayın veya Instagram&apos;dan
+          takip edin.
+        </p>
 
-          <div className="mt-12 flex flex-col items-center gap-8">
-            <a
-              href={`tel:${tel}`}
-              className="inline-flex min-w-[14rem] items-center justify-center rounded-sm border border-gold-500/50 bg-gold-600/10 px-10 py-4 text-sm font-semibold uppercase tracking-[0.2em] text-gold-100 shadow-luxury backdrop-blur-sm transition hover:border-gold-400 hover:bg-gold-500/15"
-            >
-              Call us
-            </a>
-            <p className="text-xs tracking-wide text-anthracite-500">{phone}</p>
+        <div className="mt-12 flex flex-col items-center gap-8">
+          <a
+            href={`tel:${tel}`}
+            className="inline-flex min-w-[14rem] items-center justify-center rounded-sm border border-gold-500/50 bg-gold-600/10 px-10 py-4 text-sm font-semibold uppercase tracking-[0.2em] text-gold-100 shadow-luxury backdrop-blur-sm transition hover:border-gold-400 hover:bg-gold-500/15"
+          >
+            Bizi arayın
+          </a>
+          <p className="text-xs tracking-wide text-anthracite-500">{phone}</p>
 
-            <a
-              href={igUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-14 w-14 items-center justify-center rounded-full border border-navy-700/80 text-anthracite-200 transition hover:border-gold-500/50 hover:text-gold-300"
-              aria-label="Instagram"
-            >
-              <InstagramIcon className="h-7 w-7" />
-            </a>
-            <p className="text-xs text-anthracite-600">
-              @{igHandle.replace(/^@/, "")}
-            </p>
-          </div>
+          <a
+            href={igUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-14 w-14 items-center justify-center rounded-full border border-navy-700/80 text-anthracite-200 transition hover:border-gold-500/50 hover:text-gold-300"
+            aria-label="Instagram: Ercan İnşaat"
+          >
+            <InstagramIcon className="h-7 w-7" />
+          </a>
+          <p className="text-xs text-anthracite-600">
+            @{igHandle.replace(/^@/, "")}
+          </p>
         </div>
-      </main>
+      </div>
+    </main>
   );
 }
 
