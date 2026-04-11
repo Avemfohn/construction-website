@@ -16,7 +16,7 @@ class Command(BaseCommand):
                 "description": "Özel olanaklar ve taşıyıcı güvenliği merkezde olan karma kullanımlı bir proje.",
                 "status": Project.Status.ONGOING,
                 "location": "İstanbul / Beşiktaş",
-                "features": ["Depreme dayanıklı taşıyıcı", "Özel otopark", "Concierge"],
+                "features": ["Depreme dayanıklı taşıyıcı", "Özel otopark", "Özel karşılama hizmeti"],
                 "featured": True,
                 "sort_order": 1,
             },

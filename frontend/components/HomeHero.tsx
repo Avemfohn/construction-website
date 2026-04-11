@@ -1,15 +1,21 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
-/** API’de hero videosu yoksa ve env boşsa kullanılır. */
+/** API’de hero videosu yoksa ve env boşsa kullanılır; ayrıca 404/bozuk dosya yedeği. */
 const DEFAULT_HERO_VIDEO =
   "https://videos.pexels.com/video-files/3045163/3045163-hd_1920_1080_30fps.mp4";
 
 const easeLux = [0.22, 1, 0.36, 1] as const;
 
 export function HomeHero({ heroVideoUrl }: { heroVideoUrl: string }) {
-  const videoSrc = heroVideoUrl || DEFAULT_HERO_VIDEO;
+  const primary = heroVideoUrl || DEFAULT_HERO_VIDEO;
+  const [videoSrc, setVideoSrc] = useState(primary);
+
+  useEffect(() => {
+    setVideoSrc(primary);
+  }, [primary]);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-anthracite-950">
@@ -24,6 +30,11 @@ export function HomeHero({ heroVideoUrl }: { heroVideoUrl: string }) {
             playsInline
             preload="auto"
             poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'%3E%3Crect fill='%230a1224' width='16' height='9'/%3E%3C/svg%3E"
+            onError={() => {
+              setVideoSrc((current) =>
+                current === DEFAULT_HERO_VIDEO ? current : DEFAULT_HERO_VIDEO,
+              );
+            }}
           >
             <source src={videoSrc} type="video/mp4" />
           </video>

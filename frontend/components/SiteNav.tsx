@@ -20,9 +20,9 @@ export function SiteNav() {
           <img
             src="/logo.svg"
             alt="Ercan İnşaat"
-            width={200}
-            height={60}
-            className="h-9 w-auto max-h-10 max-w-[min(220px,50vw)] object-contain object-left sm:h-10"
+            width={300}
+            height={64}
+            className="h-11 w-auto max-h-12 max-w-[min(280px,58vw)] object-contain object-left sm:h-12"
             decoding="async"
             fetchPriority="high"
           />

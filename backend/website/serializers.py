@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Announcement, FAQ, Project, ProjectImage, SiteSettings
+from .models import Announcement, FAQ, FounderVideo, Project, ProjectImage, SiteSettings
 
 
 def _absolute_file_url(request, file_field) -> str | None:
@@ -100,6 +100,27 @@ class FAQSerializer(serializers.ModelSerializer):
             "section",
             "sort_order",
         )
+
+
+class FounderVideoPublicSerializer(serializers.ModelSerializer):
+    """Public read: HTTPS URL from Cloudinary."""
+
+    video_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = FounderVideo
+        fields = ("id", "title", "video_url", "sort_order")
+
+    def get_video_url(self, obj):
+        if not obj.video:
+            return None
+        request = self.context.get("request")
+        url = getattr(obj.video, "url", None)
+        if not url:
+            return None
+        if request and url.startswith("/"):
+            return request.build_absolute_uri(url)
+        return url
 
 
 class SiteSettingsPublicSerializer(serializers.ModelSerializer):

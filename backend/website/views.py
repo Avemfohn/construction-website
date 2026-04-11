@@ -1,12 +1,14 @@
+from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Announcement, FAQ, Project, SiteSettings
+from .models import Announcement, FAQ, FounderVideo, Project, SiteSettings
 from .serializers import (
     AnnouncementSerializer,
     FAQSerializer,
+    FounderVideoPublicSerializer,
     ProjectDetailSerializer,
     ProjectListSerializer,
     SiteSettingsPublicSerializer,
@@ -79,3 +81,16 @@ class FAQViewSet(viewsets.ReadOnlyModelViewSet):
         if section in ("general", "urban_renewal"):
             qs = qs.filter(section=section)
         return qs
+
+
+class FounderVideoViewSet(viewsets.ReadOnlyModelViewSet):
+    """Published founder Q&A videos (Cloudinary URLs)."""
+
+    serializer_class = FounderVideoPublicSerializer
+
+    def get_queryset(self):
+        return (
+            FounderVideo.objects.filter(is_published=True)
+            .exclude(Q(video__isnull=True) | Q(video=""))
+            .order_by("sort_order", "id")
+        )

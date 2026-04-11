@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
-import { fetchJson } from "@/lib/api";
-import { FounderVideos } from "@/components/FounderVideos";
+import { fetchJson, rewriteForBrowser } from "@/lib/api";
+import { FounderVideos, type FounderVideoItem } from "@/components/FounderVideos";
 import { FaqAccordion } from "@/components/FaqAccordion";
 
 export const metadata: Metadata = {
@@ -19,6 +19,12 @@ type FaqRow = {
 };
 
 export default async function UrbanRenewalPage() {
+  const founderVideosRaw =
+    (await fetchJson<FounderVideoItem[]>("/api/founder-videos/")) ?? [];
+  const founderVideos: FounderVideoItem[] = founderVideosRaw.map((row) => ({
+    ...row,
+    video_url: rewriteForBrowser(row.video_url) ?? row.video_url,
+  }));
   const urban = (await fetchJson<FaqRow[]>("/api/faqs/?section=urban_renewal")) ?? [];
   const general = (await fetchJson<FaqRow[]>("/api/faqs/?section=general")) ?? [];
 
@@ -36,7 +42,7 @@ export default async function UrbanRenewalPage() {
           Aşağıda kurucumuz Ayhan Ercan&apos;ın video soru-cevapları.
         </p>
 
-        <FounderVideos />
+        <FounderVideos videos={founderVideos} />
 
         <section className="mt-16">
           <h2 className="font-display text-xl font-semibold text-anthracite-100">

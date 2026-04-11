@@ -1,4 +1,5 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 
 
 class SiteSettings(models.Model):
@@ -141,3 +142,34 @@ class FAQ(models.Model):
 
     def __str__(self) -> str:
         return self.question[:80]
+
+
+class FounderVideo(models.Model):
+    """
+    Ayhan Ercan soru–cevap videoları. Dosyalar Cloudinary üzerinden yüklenir
+    (Django admin); site /kentsel-dönüşüm sayfasında listelenir.
+    """
+
+    title = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="İsteğe bağlı başlık (oynatıcının üstünde).",
+    )
+    video = CloudinaryField(
+        "video",
+        resource_type="video",
+        blank=True,
+        null=True,
+        help_text="Cloudinary’e yüklenen video (tercihen MP4 / tarayıcı uyumlu).",
+    )
+    sort_order = models.PositiveIntegerField(default=0)
+    is_published = models.BooleanField(default=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["sort_order", "id"]
+        verbose_name = "Founder video"
+        verbose_name_plural = "Founder videos"
+
+    def __str__(self) -> str:
+        return self.title or f"Founder video #{self.pk}"

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Announcement, FAQ, Project, ProjectImage, SiteSettings
+from .models import Announcement, FAQ, FounderVideo, Project, ProjectImage, SiteSettings
 
 admin.site.site_header = "Ercan İnşaat"
 admin.site.site_title = "Ercan İnşaat"
@@ -43,6 +43,14 @@ class AnnouncementAdmin(admin.ModelAdmin):
     list_display = ("title", "is_published", "published_at")
     list_filter = ("is_published",)
     search_fields = ("title", "body")
+
+
+@admin.register(FounderVideo)
+class FounderVideoAdmin(admin.ModelAdmin):
+    list_display = ("title", "sort_order", "is_published", "updated_at")
+    list_filter = ("is_published",)
+    search_fields = ("title",)
+    ordering = ("sort_order", "id")
 
 
 @admin.register(FAQ)

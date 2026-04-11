@@ -1,14 +1,16 @@
+export type FounderVideoItem = {
+  id: number;
+  title: string;
+  video_url: string | null;
+  sort_order: number;
+};
+
 /**
- * Ayhan Ercan — YouTube soru-cevap gömüleri.
- * NEXT_PUBLIC_FOUNDER_YOUTUBE_IDS=id1,id2 (11 karakterlik video kimlikleri).
+ * Lists videos uploaded in Django admin (backend → Cloudinary).
+ * This component only reads `GET /api/founder-videos/` and renders players.
  */
-export function FounderVideos() {
-  const raw = process.env.NEXT_PUBLIC_FOUNDER_YOUTUBE_IDS?.trim();
-  const ids =
-    raw
-      ?.split(",")
-      .map((s) => s.trim())
-      .filter(Boolean) ?? [];
+export function FounderVideos({ videos }: { videos: FounderVideoItem[] }) {
+  const items = videos.filter((v) => v.video_url);
 
   return (
     <section className="mt-14">
@@ -16,33 +18,40 @@ export function FounderVideos() {
         Ayhan Ercan — soru &amp; cevap
       </h2>
       <p className="mt-2 text-sm text-anthracite-500">
-        Kurucumuzdan video yanıtlar — kimlikleri ortam değişkeniyle ekleyin.
+        Kurucumuzdan video yanıtlar. Yükleme yalnızca yönetim panelinde (arka uç);
+        bu sayfa kayıtları API ile okur ve oynatır.
       </p>
 
-      {ids.length === 0 ? (
+      {items.length === 0 ? (
         <div className="mt-6 rounded-sm border border-dashed border-gold-500/30 bg-navy-950/40 px-5 py-8 text-center text-sm text-anthracite-500">
           <p>
-            <code className="text-gold-400/90">NEXT_PUBLIC_FOUNDER_YOUTUBE_IDS</code>{" "}
-            değişkenini{" "}
-            <code className="text-gold-400/90">frontend/.env.local</code>{" "}
-            dosyasına ekleyin (virgülle ayrılmış YouTube video kimlikleri).
+            Henüz yayınlanmış video yok.{" "}
+            <span className="text-anthracite-400">
+              Yönetim panelinde &quot;Founder videos&quot; bölümünden video ekleyin;
+              Cloudinary anahtarlarının backend ortamında tanımlı olduğundan emin olun.
+            </span>
           </p>
         </div>
       ) : (
         <ul className="mt-8 space-y-10">
-          {ids.map((id) => (
-            <li key={id}>
+          {items.map((row) => (
+            <li key={row.id}>
+              {row.title ? (
+                <p className="mb-2 text-sm font-medium text-anthracite-200">
+                  {row.title}
+                </p>
+              ) : null}
               <div className="overflow-hidden rounded-sm border border-navy-800/80 shadow-luxury">
-                <div className="aspect-video w-full">
-                  <iframe
-                    className="h-full w-full"
-                    src={`https://www.youtube.com/embed/${id}`}
-                    title="Ayhan Ercan — soru ve cevap"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                  />
+                <div className="aspect-video w-full bg-navy-950">
+                  <video
+                    className="h-full w-full object-contain"
+                    controls
+                    playsInline
+                    preload="metadata"
+                    title={row.title || "Ayhan Ercan — soru ve cevap"}
+                  >
+                    <source src={row.video_url!} />
+                  </video>
                 </div>
               </div>
             </li>
