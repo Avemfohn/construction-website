@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 
 const links = [
@@ -12,8 +13,15 @@ const links = [
 ] as const;
 
 export function SiteNav() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const menuId = useId();
+
+  /* Close menu + restore scroll on client navigation (fixes stuck overlay / no scroll after route change). */
+  useEffect(() => {
+    setOpen(false);
+    document.body.style.removeProperty("overflow");
+  }, [pathname]);
 
   useEffect(() => {
     if (!open) return;

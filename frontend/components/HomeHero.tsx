@@ -1,13 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 /** API’de hero videosu yoksa ve env boşsa kullanılır; ayrıca 404/bozuk dosya yedeği. */
 const DEFAULT_HERO_VIDEO =
   "https://videos.pexels.com/video-files/3045163/3045163-hd_1920_1080_30fps.mp4";
-
-const easeLux = [0.22, 1, 0.36, 1] as const;
 
 export function HomeHero({ heroVideoUrl }: { heroVideoUrl: string }) {
   const primary = heroVideoUrl || DEFAULT_HERO_VIDEO;
@@ -28,7 +25,7 @@ export function HomeHero({ heroVideoUrl }: { heroVideoUrl: string }) {
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
             poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'%3E%3Crect fill='%230a1224' width='16' height='9'/%3E%3C/svg%3E"
             onError={() => {
               setVideoSrc((current) =>
@@ -44,42 +41,23 @@ export function HomeHero({ heroVideoUrl }: { heroVideoUrl: string }) {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_30%_0%,rgba(181,130,47,0.07),transparent_52%)]" />
       </div>
 
-      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 pb-[max(2rem,env(safe-area-inset-bottom))] pt-8 text-center sm:px-6 sm:pt-10">
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: easeLux }}
-          className="mb-4 text-xs font-medium uppercase tracking-[0.35em] text-gold-400/90"
-        >
+      {/* Plain HTML (no Framer initial opacity:0) so text is visible before/without heavy JS — fixes “blank” mobile / throttled DevTools */}
+      <div className="hero-enter relative z-10 flex min-h-screen flex-col items-center justify-center px-4 pb-[max(2rem,env(safe-area-inset-bottom))] pt-8 text-center sm:px-6 sm:pt-10">
+        <p className="mb-4 text-xs font-medium uppercase tracking-[0.35em] text-gold-400/90">
           Ercan İnşaat
-        </motion.p>
-        <motion.h1
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.1, ease: easeLux }}
-          className="max-w-[min(100%,40rem)] font-display text-3xl font-semibold tracking-tight text-anthracite-50 sm:text-4xl md:text-5xl lg:text-6xl"
-        >
+        </p>
+        <h1 className="max-w-[min(100%,40rem)] font-display text-3xl font-semibold tracking-tight text-anthracite-50 sm:text-4xl md:text-5xl lg:text-6xl">
           Güven üzerine kuruldu.
           <br />
           <span className="text-gold-300/95">Kalıcılık için tasarlandı.</span>
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.35, ease: easeLux }}
-          className="mt-6 max-w-xl text-sm leading-relaxed text-anthracite-200 sm:text-base px-1"
-        >
+        </h1>
+        <p className="mt-6 max-w-xl px-1 text-sm leading-relaxed text-anthracite-200 sm:text-base">
           Kurucumuz{" "}
           <span className="text-anthracite-100">Ayhan Ercan</span> öncülüğünde
           inşaat ve gayrimenkul geliştirme — sağlam yapı, ölçülülük ve uzun
           vadeli değer.
-        </motion.p>
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5, ease: easeLux }}
-          className="mt-10 flex w-full max-w-sm flex-col items-stretch gap-3 sm:mt-12 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center"
-        >
+        </p>
+        <div className="mt-10 flex w-full max-w-sm flex-col items-stretch gap-3 sm:mt-12 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
           <a
             href="/projects"
             className="inline-flex min-h-11 items-center justify-center rounded-sm border border-gold-500/50 bg-gold-600/10 px-8 py-3 text-sm font-medium text-gold-100 shadow-luxury backdrop-blur-sm transition hover:border-gold-400 hover:bg-gold-500/15 sm:min-h-0"
@@ -92,7 +70,7 @@ export function HomeHero({ heroVideoUrl }: { heroVideoUrl: string }) {
           >
             İletişim
           </a>
-        </motion.div>
+        </div>
       </div>
     </main>
   );
