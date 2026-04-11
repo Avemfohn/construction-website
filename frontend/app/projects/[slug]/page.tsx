@@ -46,7 +46,7 @@ export default async function ProjectDetailPage({
     }));
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-navy-950 via-anthracite-950 to-anthracite-950 px-4 pb-20 pt-10 sm:px-6">
+    <main className="min-h-screen bg-gradient-to-b from-navy-950 via-anthracite-950 to-anthracite-950 px-4 pb-20 pt-8 sm:px-6 sm:pt-10">
         <div className="mx-auto max-w-6xl">
           <Link
             href="/projects"
@@ -62,7 +62,7 @@ export default async function ProjectDetailPage({
             {project.title}
           </h1>
           {project.summary ? (
-            <p className="mt-4 max-w-3xl text-lg leading-relaxed text-anthracite-300">
+            <p className="mt-4 max-w-3xl text-base leading-relaxed text-anthracite-300 sm:text-lg">
               {project.summary}
             </p>
           ) : null}

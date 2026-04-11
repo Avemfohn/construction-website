@@ -44,7 +44,7 @@ export function HomeHero({ heroVideoUrl }: { heroVideoUrl: string }) {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_30%_0%,rgba(181,130,47,0.07),transparent_52%)]" />
       </div>
 
-      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center">
+      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 pb-[max(2rem,env(safe-area-inset-bottom))] pt-8 text-center sm:px-6 sm:pt-10">
         <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -57,7 +57,7 @@ export function HomeHero({ heroVideoUrl }: { heroVideoUrl: string }) {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.1, ease: easeLux }}
-          className="font-display text-4xl font-semibold tracking-tight text-anthracite-50 sm:text-5xl md:text-6xl"
+          className="max-w-[min(100%,40rem)] font-display text-3xl font-semibold tracking-tight text-anthracite-50 sm:text-4xl md:text-5xl lg:text-6xl"
         >
           Güven üzerine kuruldu.
           <br />
@@ -67,7 +67,7 @@ export function HomeHero({ heroVideoUrl }: { heroVideoUrl: string }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.35, ease: easeLux }}
-          className="mt-6 max-w-xl text-sm leading-relaxed text-anthracite-200 sm:text-base"
+          className="mt-6 max-w-xl text-sm leading-relaxed text-anthracite-200 sm:text-base px-1"
         >
           Kurucumuz{" "}
           <span className="text-anthracite-100">Ayhan Ercan</span> öncülüğünde
@@ -78,17 +78,17 @@ export function HomeHero({ heroVideoUrl }: { heroVideoUrl: string }) {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5, ease: easeLux }}
-          className="mt-12 flex flex-wrap items-center justify-center gap-4"
+          className="mt-10 flex w-full max-w-sm flex-col items-stretch gap-3 sm:mt-12 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center"
         >
           <a
             href="/projects"
-            className="rounded-sm border border-gold-500/50 bg-gold-600/10 px-8 py-3 text-sm font-medium text-gold-100 shadow-luxury backdrop-blur-sm transition hover:border-gold-400 hover:bg-gold-500/15"
+            className="inline-flex min-h-11 items-center justify-center rounded-sm border border-gold-500/50 bg-gold-600/10 px-8 py-3 text-sm font-medium text-gold-100 shadow-luxury backdrop-blur-sm transition hover:border-gold-400 hover:bg-gold-500/15 sm:min-h-0"
           >
             Projeler
           </a>
           <a
             href="/contact"
-            className="rounded-sm border border-navy-600/80 bg-anthracite-950/40 px-8 py-3 text-sm font-medium text-anthracite-100 transition hover:border-gold-500/40 hover:text-white"
+            className="inline-flex min-h-11 items-center justify-center rounded-sm border border-navy-600/80 bg-anthracite-950/40 px-8 py-3 text-sm font-medium text-anthracite-100 transition hover:border-gold-500/40 hover:text-white sm:min-h-0"
           >
             İletişim
           </a>

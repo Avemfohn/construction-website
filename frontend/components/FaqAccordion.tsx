@@ -16,15 +16,15 @@ export function FaqAccordion({
       {items.map((item) => (
         <li key={item.id}>
           <details className="group">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left font-medium text-anthracite-100 marker:hidden [&::-webkit-details-marker]:hidden">
-              <span className="pr-4 text-sm leading-snug sm:text-base">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 py-4 text-left font-medium text-anthracite-100 marker:hidden sm:gap-4 sm:py-5 [&::-webkit-details-marker]:hidden">
+              <span className="min-w-0 flex-1 pr-2 text-sm leading-snug [overflow-wrap:anywhere] sm:pr-4 sm:text-base">
                 {item.question}
               </span>
               <span className="shrink-0 text-gold-500/80 transition group-open:rotate-180">
                 <ChevronIcon className="h-5 w-5" />
               </span>
             </summary>
-            <div className="pb-5 pl-0 pr-10 text-sm leading-relaxed text-anthracite-400">
+            <div className="pb-4 pl-0 pr-2 text-sm leading-relaxed text-anthracite-400 [overflow-wrap:anywhere] sm:pb-5 sm:pr-10">
               {item.answer}
             </div>
           </details>

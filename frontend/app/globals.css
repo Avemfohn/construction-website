@@ -6,6 +6,18 @@
   color-scheme: dark;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   @apply bg-anthracite-950 text-anthracite-100 antialiased;
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
+}
+
+/* Flex/grid children need min-w-0 to allow text truncation / shrink on narrow screens */
+main {
+  @apply min-w-0;
 }

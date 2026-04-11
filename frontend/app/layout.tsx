@@ -23,6 +23,12 @@ export const metadata: Metadata = {
     "Ercan İnşaat — seçkin inşaat ve gayrimenkul geliştirme; kurucu Ayhan Ercan.",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover" as const,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,7 +39,7 @@ export default function RootLayout({
       lang="tr"
       className={`${display.variable} ${sans.variable}`}
     >
-      <body className="min-h-screen font-sans">
+      <body className="min-h-dvh overflow-x-hidden font-sans antialiased">
         <SiteNav />
         {children}
       </body>

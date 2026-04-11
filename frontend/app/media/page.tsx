@@ -58,7 +58,7 @@ export default async function MediaPage() {
                 className="overflow-hidden rounded-sm border border-navy-800/80 bg-anthracite-900/20 shadow-luxury"
               >
                 {post.image ? (
-                  <div className="flex w-full justify-center bg-anthracite-950/50">
+                  <div className="flex w-full max-w-full justify-center overflow-hidden bg-anthracite-950/50">
                     <Image
                       src={post.image}
                       alt={post.title}

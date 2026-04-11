@@ -42,9 +42,9 @@ export function FounderVideos({ videos }: { videos: FounderVideoItem[] }) {
                 </p>
               ) : null}
               <div className="overflow-hidden rounded-sm border border-navy-800/80 shadow-luxury">
-                <div className="aspect-video w-full bg-navy-950">
+                <div className="aspect-video w-full max-w-full bg-navy-950">
                   <video
-                    className="h-full w-full object-contain"
+                    className="h-full w-full max-w-full object-contain"
                     controls
                     playsInline
                     preload="metadata"

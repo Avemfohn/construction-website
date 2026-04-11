@@ -19,7 +19,7 @@ export default function ContactPage() {
     process.env.NEXT_PUBLIC_INSTAGRAM_URL || instagramHref(igHandle);
 
   return (
-    <main className="flex min-h-[calc(100vh-4.5rem)] flex-col items-center justify-center bg-gradient-to-b from-navy-950 via-anthracite-950 to-anthracite-950 px-6 py-20">
+    <main className="flex min-h-[calc(100dvh-4rem)] min-h-[calc(100vh-4rem)] flex-col items-center justify-center bg-gradient-to-b from-navy-950 via-anthracite-950 to-anthracite-950 px-4 py-16 sm:px-6 sm:py-20">
       <div className="max-w-md text-center">
         <p className="text-xs font-medium uppercase tracking-[0.35em] text-gold-400/90">
           İletişim
@@ -32,10 +32,10 @@ export default function ContactPage() {
           takip edin.
         </p>
 
-        <div className="mt-12 flex flex-col items-center gap-8">
+        <div className="mt-10 flex w-full max-w-sm flex-col items-center gap-6 sm:mt-12 sm:max-w-none sm:gap-8">
           <a
             href={`tel:${tel}`}
-            className="inline-flex min-w-[14rem] items-center justify-center rounded-sm border border-gold-500/50 bg-gold-600/10 px-10 py-4 text-sm font-semibold uppercase tracking-[0.2em] text-gold-100 shadow-luxury backdrop-blur-sm transition hover:border-gold-400 hover:bg-gold-500/15"
+            className="inline-flex w-full min-h-12 items-center justify-center rounded-sm border border-gold-500/50 bg-gold-600/10 px-8 py-3.5 text-sm font-semibold uppercase tracking-[0.2em] text-gold-100 shadow-luxury backdrop-blur-sm transition hover:border-gold-400 hover:bg-gold-500/15 sm:min-h-0 sm:w-auto sm:min-w-[14rem] sm:px-10 sm:py-4"
           >
             Bizi arayın
           </a>

@@ -107,7 +107,7 @@ export function ProjectGallery({
         {isOpen && active ? (
           <motion.div
             key="lightbox"
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-3 pt-14 sm:p-8 sm:pt-8"
             role="dialog"
             aria-modal="true"
             aria-labelledby={labelId}
@@ -132,7 +132,7 @@ export function ProjectGallery({
                 <button
                   type="button"
                   onClick={close}
-                  className="absolute -right-1 -top-12 z-[2] rounded-sm border border-anthracite-600/80 bg-anthracite-950/90 px-3 py-1.5 text-xs font-medium uppercase tracking-widest text-anthracite-200 transition hover:border-gold-500/50 hover:text-gold-200 sm:right-0 sm:top-0 sm:translate-y-[-120%]"
+                  className="fixed right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-[2] rounded-sm border border-anthracite-600/80 bg-anthracite-950/95 px-3 py-2 text-xs font-medium uppercase tracking-widest text-anthracite-200 shadow-luxury transition hover:border-gold-500/50 hover:text-gold-200 sm:absolute sm:right-0 sm:top-0 sm:translate-y-[-120%]"
                 >
                   Kapat
                 </button>
