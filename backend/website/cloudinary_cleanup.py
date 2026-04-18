@@ -8,6 +8,7 @@ import re
 import cloudinary.uploader
 from cloudinary import CloudinaryResource
 from cloudinary.models import CLOUDINARY_FIELD_DB_RE
+from django.core.files.uploadedfile import UploadedFile
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +30,31 @@ def _coerce_resource(value, default_resource_type: str) -> CloudinaryResource | 
             format=m.group("format"),
         )
     return None
+
+
+def _identity_token(value, default_resource_type: str) -> str | None:
+    """Token for comparing field values before/after save (cleared / new upload / same asset)."""
+    if value is None or value is False or value == "":
+        return None
+    if isinstance(value, UploadedFile):
+        return "__pending_upload__"
+    res = _coerce_resource(value, default_resource_type)
+    if not res or not res.public_id:
+        return None
+    try:
+        return res.get_prep_value()
+    except Exception:
+        return None
+
+
+def destroy_replaced_cloudinary(
+    old_value, new_value, *, default_resource_type: str = "image"
+) -> None:
+    """If a stored asset was removed or swapped for another, delete the old one from Cloudinary."""
+    old_key = _identity_token(old_value, default_resource_type)
+    new_key = _identity_token(new_value, default_resource_type)
+    if old_key and old_key != new_key:
+        destroy_cloudinary_stored(old_value, default_resource_type=default_resource_type)
 
 
 def destroy_cloudinary_stored(value, *, default_resource_type: str = "image") -> None:

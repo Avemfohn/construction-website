@@ -1,8 +1,58 @@
-from django.db.models.signals import post_delete
+from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
 
-from website.cloudinary_cleanup import destroy_cloudinary_stored
-from website.models import Announcement, FounderVideo, ProjectImage
+from website.cloudinary_cleanup import (
+    destroy_cloudinary_stored,
+    destroy_replaced_cloudinary,
+)
+from website.models import Announcement, FounderVideo, ProjectImage, SiteSettings
+
+
+@receiver(pre_save, sender=SiteSettings)
+def site_settings_cloudinary_pre_save(sender, instance, **kwargs):
+    if not instance.pk:
+        return
+    try:
+        old = SiteSettings.objects.get(pk=instance.pk)
+    except SiteSettings.DoesNotExist:
+        return
+    destroy_replaced_cloudinary(
+        old.hero_video, instance.hero_video, default_resource_type="video"
+    )
+
+
+@receiver(pre_save, sender=ProjectImage)
+def project_image_cloudinary_pre_save(sender, instance, **kwargs):
+    if not instance.pk:
+        return
+    try:
+        old = ProjectImage.objects.get(pk=instance.pk)
+    except ProjectImage.DoesNotExist:
+        return
+    destroy_replaced_cloudinary(old.image, instance.image, default_resource_type="image")
+
+
+@receiver(pre_save, sender=Announcement)
+def announcement_cloudinary_pre_save(sender, instance, **kwargs):
+    if not instance.pk:
+        return
+    try:
+        old = Announcement.objects.get(pk=instance.pk)
+    except Announcement.DoesNotExist:
+        return
+    destroy_replaced_cloudinary(old.image, instance.image, default_resource_type="image")
+    destroy_replaced_cloudinary(old.video, instance.video, default_resource_type="video")
+
+
+@receiver(pre_save, sender=FounderVideo)
+def founder_video_cloudinary_pre_save(sender, instance, **kwargs):
+    if not instance.pk:
+        return
+    try:
+        old = FounderVideo.objects.get(pk=instance.pk)
+    except FounderVideo.DoesNotExist:
+        return
+    destroy_replaced_cloudinary(old.video, instance.video, default_resource_type="video")
 
 
 @receiver(post_delete, sender=ProjectImage)
