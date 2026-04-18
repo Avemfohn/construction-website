@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
@@ -12,12 +13,15 @@ const links = [
   { href: "/contact", label: "İletişim" },
 ] as const;
 
+const easeMenu = [0.22, 1, 0.36, 1] as const;
+/** Snappy ease-out so the overlay does not linger (was reading ~1s with slow fade). */
+const easeOutFast = [0.4, 0, 0.2, 1] as const;
+
 export function SiteNav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const menuId = useId();
 
-  /* Close menu + restore scroll on client navigation (fixes stuck overlay / no scroll after route change). */
   useEffect(() => {
     setOpen(false);
     document.body.style.removeProperty("overflow");
@@ -88,37 +92,65 @@ export function SiteNav() {
         </ul>
       </nav>
 
-      {open ? (
-        <>
-          <button
-            type="button"
-            aria-label="Menüyü kapat"
-            className="fixed inset-0 z-0 bg-navy-950/65 backdrop-blur-[2px] lg:hidden"
-            onClick={() => setOpen(false)}
-          />
-          <div
-            id={menuId}
-            className="relative z-[1] border-t border-navy-800/70 bg-anthracite-950/98 shadow-luxury backdrop-blur-lg lg:hidden"
-            style={{
-              paddingBottom: "max(0.75rem, env(safe-area-inset-bottom, 0px))",
-            }}
-          >
-            <ul className="mx-auto max-h-[min(70dvh,28rem)] max-w-6xl divide-y divide-navy-800/50 overflow-y-auto overscroll-contain px-4 py-1 sm:px-6">
-              {links.map(({ href, label }) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className="block min-h-[2.75rem] py-3 text-sm font-medium uppercase tracking-[0.2em] text-anthracite-200 transition hover:text-gold-400/95 active:bg-navy-900/50"
-                    onClick={() => setOpen(false)}
+      <AnimatePresence>
+        {open ? (
+          <>
+            <motion.button
+              key="mobile-nav-backdrop"
+              type="button"
+              aria-label="Menüyü kapat"
+              className="fixed inset-0 z-0 bg-navy-950/65 backdrop-blur-[2px] lg:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{
+                opacity: 0,
+                transition: { duration: 0.1, ease: easeOutFast },
+              }}
+              transition={{ duration: 0.22, ease: easeMenu }}
+              onClick={() => setOpen(false)}
+            />
+            <motion.div
+              key="mobile-nav-panel"
+              id={menuId}
+              className="relative z-[1] overflow-hidden border-t border-navy-800/70 bg-anthracite-950/98 shadow-luxury backdrop-blur-lg lg:hidden"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{
+                opacity: 0,
+                y: -12,
+                transition: { duration: 0.16, ease: easeOutFast },
+              }}
+              transition={{ duration: 0.36, ease: easeMenu }}
+              style={{
+                paddingBottom: "max(0.75rem, env(safe-area-inset-bottom, 0px))",
+              }}
+            >
+              <ul className="mx-auto max-h-[min(70dvh,28rem)] max-w-6xl divide-y divide-navy-800/50 overflow-y-auto overscroll-contain px-4 py-1 sm:px-6">
+                {links.map(({ href, label }, i) => (
+                  <motion.li
+                    key={href}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{
+                      duration: 0.26,
+                      delay: 0.04 + i * 0.04,
+                      ease: easeMenu,
+                    }}
                   >
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </>
-      ) : null}
+                    <Link
+                      href={href}
+                      className="block min-h-[2.75rem] py-3 text-sm font-medium uppercase tracking-[0.2em] text-anthracite-200 transition hover:text-gold-400/95 active:bg-navy-900/50"
+                      onClick={() => setOpen(false)}
+                    >
+                      {label}
+                    </Link>
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.div>
+          </>
+        ) : null}
+      </AnimatePresence>
     </header>
   );
 }

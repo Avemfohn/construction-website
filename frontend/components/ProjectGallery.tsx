@@ -58,6 +58,8 @@ export function ProjectGallery({
   const active =
     openIndex !== null ? images[openIndex] ?? null : null;
   const isOpen = openIndex !== null && active !== null;
+  const n = images.length;
+  const idx = openIndex ?? 0;
 
   return (
     <>
@@ -107,91 +109,108 @@ export function ProjectGallery({
         {isOpen && active ? (
           <motion.div
             key="lightbox"
-            className="fixed inset-0 z-[100] flex items-center justify-center p-3 pt-14 sm:p-8 sm:pt-8"
+            className="fixed inset-0 z-[100] flex flex-col bg-navy-950"
+            style={{
+              paddingTop: "max(0.5rem, env(safe-area-inset-top, 0px))",
+              paddingBottom: "max(0.25rem, env(safe-area-inset-bottom, 0px))",
+            }}
             role="dialog"
             aria-modal="true"
             aria-labelledby={labelId}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.65, ease: easeLux }}
+            transition={{ duration: 0.35, ease: easeLux }}
           >
             <button
               type="button"
               aria-label="Galeriyi kapat"
-              className="absolute inset-0 bg-navy-950/88 backdrop-blur-sm"
+              className="absolute inset-0 z-0 bg-navy-950/90 backdrop-blur-[1px]"
               onClick={close}
             />
-            <div className="relative z-[1] flex max-h-[min(90vh,900px)] w-full max-w-5xl flex-col">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.985 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.72, ease: easeLux, delay: 0.08 }}
-                className="relative flex w-full flex-col"
+
+            <div className="relative z-[2] flex shrink-0 items-center justify-between gap-3 px-3 sm:px-5">
+              <p className="min-w-0 text-xs font-medium uppercase tracking-[0.2em] text-anthracite-500">
+                {n > 1 ? (
+                  <>
+                    {idx + 1} / {n}
+                  </>
+                ) : (
+                  <span className="text-anthracite-600">Galeri</span>
+                )}
+              </p>
+              <button
+                type="button"
+                onClick={close}
+                className="min-h-11 min-w-[5.5rem] shrink-0 rounded-sm border border-anthracite-600/80 bg-anthracite-950/95 px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-anthracite-100 shadow-luxury transition hover:border-gold-500/50 hover:text-gold-200"
               >
+                Kapat
+              </button>
+            </div>
+
+            <div className="relative z-[1] flex min-h-0 flex-1 flex-col items-center justify-center px-2 py-2 sm:px-4">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={active.id}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.28, ease: easeLux }}
+                  className="flex w-full max-w-5xl flex-col items-center"
+                >
+                  <div className="relative aspect-video w-full max-h-[min(58dvh,calc(100dvh-13rem))] overflow-hidden rounded-sm border border-navy-800/80 bg-anthracite-950 shadow-luxury sm:max-h-[min(68dvh,calc(100dvh-12rem))]">
+                    <Image
+                      src={active.image}
+                      alt={active.caption || title}
+                      fill
+                      className="object-contain"
+                      sizes="100vw"
+                      priority
+                    />
+                  </div>
+
+                  {active.caption ? (
+                    <p
+                      id={labelId}
+                      className="mt-3 max-h-24 w-full overflow-y-auto px-2 text-center text-sm leading-snug text-anthracite-300 sm:mt-4"
+                    >
+                      {active.caption}
+                    </p>
+                  ) : (
+                    <span id={labelId} className="sr-only">
+                      {title} — görsel {idx + 1} / {n}
+                    </span>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {n > 1 ? (
+              <div className="relative z-[2] flex shrink-0 items-center justify-center gap-4 px-4 pb-3 pt-1 sm:gap-6 sm:pb-4">
                 <button
                   type="button"
-                  onClick={close}
-                  className="fixed right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-[2] rounded-sm border border-anthracite-600/80 bg-anthracite-950/95 px-3 py-2 text-xs font-medium uppercase tracking-widest text-anthracite-200 shadow-luxury transition hover:border-gold-500/50 hover:text-gold-200 sm:absolute sm:right-0 sm:top-0 sm:translate-y-[-120%]"
+                  aria-label="Önceki görsel"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    go(-1);
+                  }}
+                  className="flex min-h-12 min-w-[3.25rem] items-center justify-center rounded-sm border border-navy-600/90 bg-anthracite-900/95 text-xl leading-none text-anthracite-100 shadow-luxury transition hover:border-gold-500/45 hover:text-gold-200 active:scale-[0.98]"
                 >
-                  Kapat
+                  ‹
                 </button>
-                {images.length > 1 ? (
-                  <>
-                    <button
-                      type="button"
-                      aria-label="Önceki görsel"
-                      onClick={() => go(-1)}
-                      className="absolute left-0 top-1/2 z-[2] -translate-x-1 translate-y-[-50%] rounded-sm border border-navy-700/90 bg-anthracite-950/80 p-3 text-anthracite-200 transition hover:border-gold-500/50 hover:text-gold-200 sm:-translate-x-4"
-                    >
-                      ‹
-                    </button>
-                    <button
-                      type="button"
-                      aria-label="Sonraki görsel"
-                      onClick={() => go(1)}
-                      className="absolute right-0 top-1/2 z-[2] translate-x-1 translate-y-[-50%] rounded-sm border border-navy-700/90 bg-anthracite-950/80 p-3 text-anthracite-200 transition hover:border-gold-500/50 hover:text-gold-200 sm:translate-x-4"
-                    >
-                      ›
-                    </button>
-                  </>
-                ) : null}
-
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={active.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.62, ease: easeLux }}
-                    className="w-full"
-                  >
-                    <div className="relative aspect-video w-full overflow-hidden rounded-sm border border-navy-800/80 shadow-luxury">
-                      <Image
-                        src={active.image}
-                        alt={active.caption || title}
-                        fill
-                        className="object-contain bg-anthracite-950"
-                        sizes="100vw"
-                        priority
-                      />
-                    </div>
-                    {active.caption ? (
-                      <p
-                        id={labelId}
-                        className="mt-4 text-center text-sm text-anthracite-300"
-                      >
-                        {active.caption}
-                      </p>
-                    ) : (
-                      <span id={labelId} className="sr-only">
-                        {title} — görsel {(openIndex ?? 0) + 1} / {images.length}
-                      </span>
-                    )}
-                  </motion.div>
-                </AnimatePresence>
-              </motion.div>
-            </div>
+                <button
+                  type="button"
+                  aria-label="Sonraki görsel"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    go(1);
+                  }}
+                  className="flex min-h-12 min-w-[3.25rem] items-center justify-center rounded-sm border border-navy-600/90 bg-anthracite-900/95 text-xl leading-none text-anthracite-100 shadow-luxury transition hover:border-gold-500/45 hover:text-gold-200 active:scale-[0.98]"
+                >
+                  ›
+                </button>
+              </div>
+            ) : null}
           </motion.div>
         ) : null}
       </AnimatePresence>

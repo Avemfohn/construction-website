@@ -5,14 +5,15 @@ from cloudinary.models import CloudinaryField
 class SiteSettings(models.Model):
     """
     Singleton (pk=1): global site assets editable in admin.
-    Hero background video for the marketing homepage.
+    Hero background video for the marketing homepage (Cloudinary).
     """
 
-    hero_video = models.FileField(
-        upload_to="site/hero/",
+    hero_video = CloudinaryField(
+        "video",
+        resource_type="video",
         blank=True,
         null=True,
-        help_text="MP4 (H.264) recommended for broad browser support.",
+        help_text="Cloudinary’e yüklenen MP4 (H.264 önerilir).",
     )
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -80,7 +81,11 @@ class ProjectImage(models.Model):
         related_name="images",
         on_delete=models.CASCADE,
     )
-    image = models.ImageField(upload_to="projects/%Y/%m/")
+    image = CloudinaryField(
+        "image",
+        blank=False,
+        help_text="Cloudinary’e yüklenen görsel.",
+    )
     caption = models.CharField(max_length=255, blank=True)
     sort_order = models.PositiveIntegerField(default=0)
 
@@ -99,10 +104,18 @@ class Announcement(models.Model):
 
     title = models.CharField(max_length=255)
     body = models.TextField(blank=True)
-    image = models.ImageField(
-        upload_to="announcements/%Y/%m/",
+    image = CloudinaryField(
+        "image",
         blank=True,
         null=True,
+        help_text="İsteğe bağlı kapak görseli (Cloudinary).",
+    )
+    video = CloudinaryField(
+        "video",
+        resource_type="video",
+        blank=True,
+        null=True,
+        help_text="İsteğe bağlı video (Cloudinary).",
     )
     is_published = models.BooleanField(default=True)
     published_at = models.DateTimeField(auto_now_add=True)

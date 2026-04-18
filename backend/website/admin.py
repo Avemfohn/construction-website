@@ -43,6 +43,7 @@ class AnnouncementAdmin(admin.ModelAdmin):
     list_display = ("title", "is_published", "published_at")
     list_filter = ("is_published",)
     search_fields = ("title", "body")
+    fields = ("title", "body", "image", "video", "is_published")
 
 
 @admin.register(FounderVideo)

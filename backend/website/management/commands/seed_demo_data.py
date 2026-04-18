@@ -1,10 +1,10 @@
 from django.core.management.base import BaseCommand
 
-from website.models import Announcement, FAQ, Project, ProjectImage
+from website.models import Announcement, FAQ, Project
 
 
 class Command(BaseCommand):
-    help = "Örnek proje, görsel, SSS ve duyuru verisi ekler"
+    help = "Örnek proje, SSS ve duyuru metni ekler (görseller Cloudinary üzerinden yönetimden)"
 
     def handle(self, *args, **options):
         # Projects
@@ -36,27 +36,13 @@ class Command(BaseCommand):
             },
         )
 
-        demo_project_images = [
-            (p1, "Ana cephe", "projects/demo/bosphorus-1.png", 1),
-            (p1, "Lobi detayı", "projects/demo/bosphorus-2.png", 2),
-            (p2, "Villa dış görünüm", "projects/demo/golden-gate-1.png", 1),
-        ]
-
-        for project, caption, image_path, sort_order in demo_project_images:
-            ProjectImage.objects.update_or_create(
-                project=project,
-                caption=caption,
-                defaults={
-                    "image": image_path,
-                    "sort_order": sort_order,
-                },
-            )
+        # Galeri görselleri artık Cloudinary — yerel dosya yolu kullanılmaz.
+        # Projeler oluşturulduktan sonra Django yönetiminden Project images ekleyin.
 
         Announcement.objects.update_or_create(
             title="Ayhan Ercan — şantiye notu (12. hafta)",
             defaults={
                 "body": "Ercan İnşaat sahasında taşıyıcı sistem ve cephe ilerlemesi planlandığı gibi devam ediyor.",
-                "image": "announcements/demo/founder-site-visit.png",
                 "is_published": True,
             },
         )

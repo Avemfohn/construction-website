@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 
-import { fetchJson } from "@/lib/api";
+import { fetchJson, rewriteForBrowser } from "@/lib/api";
 
 export const metadata: Metadata = {
   title: "Ayhan Ercan — medya",
@@ -14,6 +14,7 @@ type Announcement = {
   title: string;
   body: string;
   image: string | null;
+  video: string | null;
   published_at: string;
 };
 
@@ -30,7 +31,12 @@ function formatDate(iso: string) {
 }
 
 export default async function MediaPage() {
-  const items = (await fetchJson<Announcement[]>("/api/announcements/")) ?? [];
+  const raw = (await fetchJson<Announcement[]>("/api/announcements/")) ?? [];
+  const items: Announcement[] = raw.map((row) => ({
+    ...row,
+    image: rewriteForBrowser(row.image) ?? row.image,
+    video: rewriteForBrowser(row.video) ?? row.video,
+  }));
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-navy-950 via-anthracite-950 to-anthracite-950 px-4 pb-24 pt-10 sm:px-6">
@@ -68,6 +74,21 @@ export default async function MediaPage() {
                       className="h-auto w-full max-h-[min(85vh,1100px)] object-contain"
                       style={{ width: "100%", height: "auto" }}
                     />
+                  </div>
+                ) : null}
+                {post.video ? (
+                  <div className="border-b border-navy-800/60 bg-anthracite-950/50 px-2 py-4 sm:px-4">
+                    <div className="mx-auto aspect-video max-w-full overflow-hidden rounded-sm border border-navy-800/80">
+                      <video
+                        className="h-full w-full object-contain"
+                        controls
+                        playsInline
+                        preload="metadata"
+                        title={post.title}
+                      >
+                        <source src={post.video} type="video/mp4" />
+                      </video>
+                    </div>
                   </div>
                 ) : null}
                 <div className="p-6 sm:p-8">

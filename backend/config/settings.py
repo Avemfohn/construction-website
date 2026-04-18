@@ -1,11 +1,14 @@
 import os
 from pathlib import Path
-
+import cloudinary
 from dotenv import load_dotenv
 
-load_dotenv()
-
 BASE_DIR = Path(__file__).resolve().parent.parent
+# Always load backend/.env regardless of cwd. Use override=True so real values from the file
+# replace empty placeholders injected by docker-compose (e.g. CLOUDINARY_API_KEY: ${VAR:-}).
+load_dotenv(BASE_DIR / ".env", override=True)
+# Optional repo-root .env; do not clobber keys already set from backend/.env.
+load_dotenv(BASE_DIR.parent / ".env", override=False)
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-change-me")
 DEBUG = os.environ.get("DEBUG", "True").lower() in ("1", "true", "yes")
@@ -97,7 +100,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Cloudinary (Founder videos on /urban-renewal).
 # https://cloudinary.com/documentation/django_integration
-import cloudinary
+
 
 _cloudinary_url = os.environ.get("CLOUDINARY_URL", "").strip()
 if _cloudinary_url:
