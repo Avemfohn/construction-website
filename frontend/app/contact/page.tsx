@@ -12,9 +12,9 @@ function instagramHref(handle: string): string {
 
 export default function ContactPage() {
   const phone =
-    process.env.NEXT_PUBLIC_CONTACT_PHONE || "+90 212 555 00 00";
+    process.env.NEXT_PUBLIC_CONTACT_PHONE || "+90 212 569 54 54";
   const tel = phone.replace(/\s+/g, "");
-  const igHandle = process.env.NEXT_PUBLIC_INSTAGRAM_HANDLE || "ercaninsaat";
+  const igHandle = process.env.NEXT_PUBLIC_INSTAGRAM_HANDLE || "ayhanerc";
   const igUrl =
     process.env.NEXT_PUBLIC_INSTAGRAM_URL || instagramHref(igHandle);
 
@@ -28,8 +28,10 @@ export default function ContactPage() {
           Bize ulaşın
         </h1>
         <p className="mt-4 text-sm leading-relaxed text-anthracite-400">
-          Ercan İnşaat — doğrudan hat için arayın veya Instagram&apos;dan
-          takip edin.
+          Bize belirtilen iletişim bilgileri ile ulaşabilirsiniz.
+        </p>
+        <p className="mt-3 text-xs leading-relaxed text-anthracite-500">
+          Nine Hatun, İnönü Cd. No:31, 34220 Esenler/İstanbul
         </p>
 
         <div className="mt-10 flex w-full max-w-sm flex-col items-center gap-6 sm:mt-12 sm:max-w-none sm:gap-8">

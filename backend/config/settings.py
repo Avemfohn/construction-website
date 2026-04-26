@@ -126,8 +126,10 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ],
+    # Staff only (same users as Django admin). Anonymous browsers cannot read /api/.
+    # Next.js server-side fetches must send Authorization: Token <key> (see frontend INTERNAL_API_AUTH_TOKEN).
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+        "rest_framework.permissions.IsAdminUser",
     ],
     "DEFAULT_PARSER_CLASSES": [
         "rest_framework.parsers.JSONParser",

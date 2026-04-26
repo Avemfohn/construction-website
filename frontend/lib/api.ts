@@ -13,9 +13,15 @@ export function getServerApiBase(): string {
 
 export async function fetchJson<T>(path: string, init?: RequestInit): Promise<T | null> {
   const url = `${getServerApiBase()}${path.startsWith("/") ? path : `/${path}`}`;
+  const headers = new Headers(init?.headers);
+  const token = process.env.INTERNAL_API_AUTH_TOKEN?.trim();
+  if (token && !headers.has("Authorization")) {
+    headers.set("Authorization", `Token ${token}`);
+  }
   try {
     const res = await fetch(url, {
       ...init,
+      headers,
       next: { revalidate: 60 },
     });
     if (!res.ok) return null;

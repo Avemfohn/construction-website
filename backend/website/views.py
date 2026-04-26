@@ -1,6 +1,5 @@
 from django.db.models import Q
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -38,24 +37,12 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
 
 class AnnouncementViewSet(viewsets.ModelViewSet):
     """
-    GET: public sees only published; authenticated users see all.
-    POST/PUT/PATCH/DELETE: require authentication (Token or session).
+    Staff-only (IsAdminUser). Sees all announcements including drafts.
     Supports multipart image uploads for mobile / PWA.
     """
 
     serializer_class = AnnouncementSerializer
-
-    def get_queryset(self):
-        qs = Announcement.objects.all()
-        user = self.request.user
-        if not user.is_authenticated:
-            qs = qs.filter(is_published=True)
-        return qs
-
-    def get_permissions(self):
-        if self.action in ("create", "update", "partial_update", "destroy"):
-            return [IsAuthenticated()]
-        return super().get_permissions()
+    queryset = Announcement.objects.all()
 
 
 class SiteSettingsPublicView(APIView):
