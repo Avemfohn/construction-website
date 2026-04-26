@@ -1,8 +1,8 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 
 const links = [
@@ -18,15 +18,17 @@ const easeOutFast = [0.4, 0, 0.2, 1] as const;
 
 export function SiteNav() {
   const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [animatingHref, setAnimatingHref] = useState<string | null>(null);
   const [showIntro, setShowIntro] = useState(true);
-  const [introTarget, setIntroTarget] = useState({ x: 0, y: 0, scale: 0.24 });
 
   const menuId = useId();
   const animTimeoutRef = useRef<number | null>(null);
+  const navTimeoutRef = useRef<number | null>(null);
   const logoAnchorRef = useRef<HTMLImageElement | null>(null);
+  const introControls = useAnimationControls();
 
   const triggerBuildAnim = (href: string) => {
     setAnimatingHref(href);
@@ -35,6 +37,25 @@ export function SiteNav() {
       setAnimatingHref((current) => (current === href ? null : current));
       animTimeoutRef.current = null;
     }, 700);
+  };
+
+  const playThenNavigate = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+    closeMenu = false,
+  ) => {
+    if (closeMenu) setOpen(false);
+    if (href === pathname) {
+      triggerBuildAnim(href);
+      return;
+    }
+    e.preventDefault();
+    triggerBuildAnim(href);
+    if (navTimeoutRef.current) window.clearTimeout(navTimeoutRef.current);
+    navTimeoutRef.current = window.setTimeout(() => {
+      router.push(href);
+      navTimeoutRef.current = null;
+    }, 240);
   };
 
   useEffect(() => {
@@ -70,6 +91,7 @@ export function SiteNav() {
   useEffect(
     () => () => {
       if (animTimeoutRef.current) window.clearTimeout(animTimeoutRef.current);
+      if (navTimeoutRef.current) window.clearTimeout(navTimeoutRef.current);
     },
     [],
   );
@@ -81,24 +103,62 @@ export function SiteNav() {
       return;
     }
 
-    const measure = () => {
+    let cancelled = false;
+    const sleep = (ms: number) =>
+      new Promise<void>((resolve) => window.setTimeout(resolve, ms));
+
+    const measureTarget = () => {
       const anchor = logoAnchorRef.current?.getBoundingClientRect();
-      if (!anchor) return;
+      if (!anchor) return null;
       const startX = window.innerWidth / 2;
       const startY = window.innerHeight / 2;
       const targetX = anchor.left + anchor.width / 2;
       const targetY = anchor.top + anchor.height / 2;
-      const startWidth = Math.min(window.innerWidth * 0.75, 520);
+      const startWidth = Math.min(window.innerWidth * 0.76, 520);
       const targetScale = Math.max(0.16, Math.min(0.55, anchor.width / startWidth));
-      setIntroTarget({
+      return {
         x: targetX - startX,
         y: targetY - startY,
         scale: targetScale,
-      });
+      };
     };
 
-    const raf = window.requestAnimationFrame(measure);
-    return () => window.cancelAnimationFrame(raf);
+    const runIntro = async () => {
+      // Wait until logo anchor is mounted/measurable.
+      let target = measureTarget();
+      let tries = 0;
+      while (!target && tries < 40 && !cancelled) {
+        tries += 1;
+        await sleep(16);
+        target = measureTarget();
+      }
+      if (!target || cancelled) return;
+
+      await introControls.start({
+        x: 0,
+        y: 0,
+        scale: 1.1,
+        transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+      });
+
+      // Re-measure right before the landing movement for pixel-accurate snap.
+      const latestTarget = measureTarget() ?? target;
+      await introControls.start({
+        x: latestTarget.x,
+        y: latestTarget.y,
+        scale: latestTarget.scale,
+        transition: { duration: 0.95, ease: [0.22, 1, 0.36, 1] },
+      });
+
+      if (cancelled) return;
+      sessionStorage.setItem("site_logo_intro_seen_v1", "1");
+      setShowIntro(false);
+    };
+
+    runIntro();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -166,12 +226,9 @@ export function SiteNav() {
                         ? "hover:bg-gold-500/14 hover:text-gold-200"
                         : "hover:bg-white/8 hover:text-gold-200"
                     }`}
-                    onClick={() => triggerBuildAnim(href)}
+                    onClick={(e) => playThenNavigate(e, href)}
                   >
                     {label}
-                    <AnimatePresence>
-                      {animatingHref === href ? <BuildPulse /> : null}
-                    </AnimatePresence>
                   </Link>
                 </li>
               ))}
@@ -206,20 +263,7 @@ export function SiteNav() {
           >
             <motion.div
               initial={{ x: 0, y: 0, scale: 1 }}
-              animate={{
-                x: [0, 0, 0, introTarget.x],
-                y: [0, 0, 0, introTarget.y],
-                scale: [1, 1.1, 1.1, introTarget.scale],
-              }}
-              transition={{
-                duration: 1.85,
-                times: [0, 0.32, 0.6, 1],
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              onAnimationComplete={() => {
-                sessionStorage.setItem("site_logo_intro_seen_v1", "1");
-                setShowIntro(false);
-              }}
+              animate={introControls}
             >
               <img
                 src="/logo.png"
@@ -281,10 +325,7 @@ export function SiteNav() {
                     <Link
                       href={href}
                       className="block min-h-[2.75rem] py-3 text-sm font-medium uppercase tracking-[0.2em] text-anthracite-200 transition hover:text-gold-400/95 active:bg-navy-900/50"
-                      onClick={() => {
-                        triggerBuildAnim(href);
-                        setOpen(false);
-                      }}
+                      onClick={(e) => playThenNavigate(e, href, true)}
                     >
                       {label}
                     </Link>
@@ -296,36 +337,6 @@ export function SiteNav() {
         ) : null}
       </AnimatePresence>
     </header>
-  );
-}
-
-function BuildPulse() {
-  return (
-    <motion.span
-      className="pointer-events-none absolute -right-1 -top-4 flex h-4 items-end gap-[2px]"
-      initial={{ opacity: 0, y: 4 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -2 }}
-    >
-      <motion.span
-        className="block w-[3px] rounded-sm bg-gold-300/95"
-        initial={{ height: 0 }}
-        animate={{ height: 8 }}
-        transition={{ duration: 0.25, delay: 0.02 }}
-      />
-      <motion.span
-        className="block w-[3px] rounded-sm bg-gold-400/95"
-        initial={{ height: 0 }}
-        animate={{ height: 13 }}
-        transition={{ duration: 0.25, delay: 0.08 }}
-      />
-      <motion.span
-        className="block w-[3px] rounded-sm bg-gold-500/95"
-        initial={{ height: 0 }}
-        animate={{ height: 10 }}
-        transition={{ duration: 0.25, delay: 0.14 }}
-      />
-    </motion.span>
   );
 }
 
