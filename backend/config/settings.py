@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
+
 import cloudinary
+import dj_database_url
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -66,18 +68,28 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DATABASE_NAME", "construction_db"),
-        "USER": os.environ.get("DATABASE_USER", "construction"),
-        "PASSWORD": os.environ.get("DATABASE_PASSWORD", "construction_dev"),
-        # Default `db` matches docker-compose Postgres service (devcontainer / backend containers).
-        # For Postgres on your machine only, set DATABASE_HOST=localhost in backend/.env
-        "HOST": os.environ.get("DATABASE_HOST", "db"),
-        "PORT": os.environ.get("DATABASE_PORT", "5432"),
+# Railway / Heroku-style: set DATABASE_URL (Postgres plugin). Local Docker: use DATABASE_* or omit URL.
+_database_url = os.environ.get("DATABASE_URL", "").strip()
+if _database_url:
+    DATABASES = {
+        "default": dj_database_url.parse(
+            _database_url,
+            conn_max_age=600,
+        )
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ.get("DATABASE_NAME", "construction_db"),
+            "USER": os.environ.get("DATABASE_USER", "construction"),
+            "PASSWORD": os.environ.get("DATABASE_PASSWORD", "construction_dev"),
+            # Default `db` matches docker-compose Postgres service (devcontainer / backend containers).
+            # For Postgres on your machine only, set DATABASE_HOST=localhost in backend/.env
+            "HOST": os.environ.get("DATABASE_HOST", "db"),
+            "PORT": os.environ.get("DATABASE_PORT", "5432"),
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
