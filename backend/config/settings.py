@@ -15,9 +15,14 @@ load_dotenv(BASE_DIR.parent / ".env", override=False)
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-change-me")
 DEBUG = os.environ.get("DEBUG", "True").lower() in ("1", "true", "yes")
 
+# If ALLOWED_HOSTS is set but empty (e.g. Railway variable present with no value), os.environ.get
+# returns "" and Django ends up with [] — management commands fail when DEBUG=False.
+_allowed_hosts_raw = os.environ.get("ALLOWED_HOSTS")
+if _allowed_hosts_raw is None or not str(_allowed_hosts_raw).strip():
+    _allowed_hosts_raw = "localhost,127.0.0.1,backend"
 ALLOWED_HOSTS = [
     h.strip()
-    for h in os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1,backend").split(",")
+    for h in str(_allowed_hosts_raw).split(",")
     if h.strip()
 ]
 
