@@ -1,4 +1,24 @@
 /** @type {import('next').NextConfig} */
+function apiMediaRemotePattern() {
+  const raw = process.env.NEXT_PUBLIC_API_URL?.trim();
+  if (!raw) return [];
+  try {
+    const url = new URL(raw.startsWith("http") ? raw : `https://${raw}`);
+    const protocol = url.protocol.replace(":", "");
+    const port = url.port || undefined;
+    return [
+      {
+        protocol,
+        hostname: url.hostname,
+        ...(port ? { port } : {}),
+        pathname: "/media/**",
+      },
+    ];
+  } catch {
+    return [];
+  }
+}
+
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
@@ -29,6 +49,7 @@ const nextConfig = {
         port: "8000",
         pathname: "/media/**",
       },
+      ...apiMediaRemotePattern(),
     ],
   },
 };
