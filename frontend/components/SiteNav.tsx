@@ -82,10 +82,35 @@ export function SiteNav() {
   }, []);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 22);
+    const ENTER_SCROLL_Y = 28;
+    const EXIT_SCROLL_Y = 12;
+
+    const onScroll = () => {
+      const scrollY = window.scrollY;
+      const doc = document.documentElement;
+      const maxScrollable = Math.max(0, doc.scrollHeight - window.innerHeight);
+
+      // Keep nav stable on short pages where shrinking/expanding can change layout
+      // enough to bounce around the threshold and create visible shaking.
+      if (maxScrollable <= ENTER_SCROLL_Y) {
+        setScrolled(false);
+        return;
+      }
+
+      setScrolled((prev) => {
+        if (prev) return scrollY > EXIT_SCROLL_Y;
+        return scrollY > ENTER_SCROLL_Y;
+      });
+    };
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   useEffect(
@@ -173,7 +198,7 @@ export function SiteNav() {
   return (
     <header className="sticky top-0 z-50 supports-[padding:max(0px)]:pt-[env(safe-area-inset-top)]">
       <nav
-        className="relative z-[2] mx-auto max-w-5xl px-4 pb-2 pt-3 sm:px-6"
+        className="relative z-[2] mx-auto flex min-h-[calc(0.75rem+0.5rem+0.75rem+4.35rem)] max-w-5xl flex-col justify-center px-4 pb-2 pt-3 sm:px-6"
         aria-label="Ana navigasyon"
       >
         <div
