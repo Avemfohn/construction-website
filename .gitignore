@@ -8,3 +8,5 @@ __pycache__
 .env.local
 backend/media
 *.log
+.security-venv
+.security-cache

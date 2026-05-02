@@ -137,3 +137,32 @@ REST_FRAMEWORK = {
         "rest_framework.parsers.FormParser",
     ],
 }
+
+# Browser POST origins when using SessionAuthentication across sites (e.g. admin on another host).
+_csrf_trusted = os.environ.get("CSRF_TRUSTED_ORIGINS", "")
+CSRF_TRUSTED_ORIGINS = [o.strip() for o in _csrf_trusted.split(",") if o.strip()]
+
+if not DEBUG:
+    # Hardening for real deployments (see `manage.py check --deploy`).
+    # TLS is often terminated at nginx/Caddy; `SECURE_PROXY_SSL_HEADER` lets Django trust
+    # `X-Forwarded-Proto` so redirects and secure cookies behave correctly.
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = int(os.environ.get("SECURE_HSTS_SECONDS", "31536000"))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get(
+        "SECURE_HSTS_INCLUDE_SUBDOMAINS", "true"
+    ).lower() in ("1", "true", "yes")
+    SECURE_HSTS_PRELOAD = os.environ.get("SECURE_HSTS_PRELOAD", "").lower() in (
+        "1",
+        "true",
+        "yes",
+    )
+    SECURE_SSL_REDIRECT = os.environ.get("SECURE_SSL_REDIRECT", "true").lower() in (
+        "1",
+        "true",
+        "yes",
+    )
+    if os.environ.get("USE_X_FORWARDED_PROTO", "true").lower() in ("1", "true", "yes"):
+        SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
