@@ -10,6 +10,10 @@ function instagramHref(handle: string): string {
   return `https://www.instagram.com/${h}/`;
 }
 
+/** Paylaşım linki — tek işletme; metin araması gibi çoklu sonuç çıkmaz. */
+const DEFAULT_GOOGLE_MAPS_PLACE_URL =
+  "https://maps.app.goo.gl/6TECj6EDD5jaJUhN8";
+
 export default function ContactPage() {
   const phone =
     process.env.NEXT_PUBLIC_CONTACT_PHONE || "+90 212 569 54 54";
@@ -20,14 +24,9 @@ export default function ContactPage() {
   const addressLine =
     process.env.NEXT_PUBLIC_CONTACT_ADDRESS?.trim() ||
     "Nine Hatun, İnönü Cd. No:31, 34220 Esenler/İstanbul";
-  /** Haritada işletme kartı çıksın diye sorguya firma adı eklenir; ekranda yalnızca adres gösterilir. */
-  const mapsSearchQuery =
-    process.env.NEXT_PUBLIC_GOOGLE_MAPS_SEARCH_QUERY?.trim() ||
-    `Ercan İnşaat, ${addressLine}`;
-  const directMapsUrl = process.env.NEXT_PUBLIC_GOOGLE_MAPS_URL?.trim();
   const mapsUrl =
-    directMapsUrl ||
-    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsSearchQuery)}`;
+    process.env.NEXT_PUBLIC_GOOGLE_MAPS_URL?.trim() ||
+    DEFAULT_GOOGLE_MAPS_PLACE_URL;
 
   return (
     <main className="flex min-h-[calc(100dvh-4rem)] min-h-[calc(100vh-4rem)] flex-col items-center justify-center bg-gradient-to-b from-navy-950 via-anthracite-950 to-anthracite-950 px-4 py-16 sm:px-6 sm:py-20">
