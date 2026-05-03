@@ -38,8 +38,7 @@ export default async function UrbanRenewalPage() {
           Kentsel dönüşüm
         </h1>
         <p className="mt-4 text-sm leading-relaxed text-anthracite-400">
-          Süreç, güvenlik ve sakinlerle çalışma biçimimiz hakkında net yanıtlar.
-          Aşağıda kurucumuz Ayhan Ercan&apos;ın video soru-cevapları.
+          Süreç, güvenlik ve sakinlerle çalışma biçimimiz hakkında soru-cevaplar.
         </p>
 
         <FounderVideos videos={founderVideos} />
