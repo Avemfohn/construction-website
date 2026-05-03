@@ -84,12 +84,12 @@ export function ProjectGallery({
                 aria-expanded={openIndex === index}
                 aria-controls={labelId}
               >
-                <div className="relative aspect-video w-full cursor-zoom-in">
+                <div className="relative aspect-[4/3] w-full cursor-zoom-in bg-anthracite-950 sm:aspect-[3/2]">
                   <Image
                     src={img.image}
                     alt={img.caption || title}
                     fill
-                    className="object-cover transition duration-500 ease-out group-hover:scale-[1.02] group-hover:brightness-105"
+                    className="object-contain object-center transition duration-500 ease-out group-hover:scale-[1.01] group-hover:brightness-105"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
                   <span className="pointer-events-none absolute inset-0 bg-navy-950/0 transition group-hover:bg-navy-950/20" />
@@ -158,12 +158,12 @@ export function ProjectGallery({
                   transition={{ duration: 0.28, ease: easeLux }}
                   className="flex w-full max-w-5xl flex-col items-center"
                 >
-                  <div className="relative aspect-video w-full max-h-[min(58dvh,calc(100dvh-13rem))] overflow-hidden rounded-sm border border-navy-800/80 bg-anthracite-950 shadow-luxury sm:max-h-[min(68dvh,calc(100dvh-12rem))]">
+                  <div className="relative h-[min(72dvh,calc(100dvh-13rem))] w-full max-w-5xl overflow-hidden rounded-sm border border-navy-800/80 bg-anthracite-950 shadow-luxury sm:h-[min(76dvh,calc(100dvh-12rem))]">
                     <Image
                       src={active.image}
                       alt={active.caption || title}
                       fill
-                      className="object-contain"
+                      className="object-contain object-center"
                       sizes="100vw"
                       priority
                     />
