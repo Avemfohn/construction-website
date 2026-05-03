@@ -20,7 +20,14 @@ export default function ContactPage() {
   const addressLine =
     process.env.NEXT_PUBLIC_CONTACT_ADDRESS?.trim() ||
     "Nine Hatun, İnönü Cd. No:31, 34220 Esenler/İstanbul";
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressLine)}`;
+  /** Haritada işletme kartı çıksın diye sorguya firma adı eklenir; ekranda yalnızca adres gösterilir. */
+  const mapsSearchQuery =
+    process.env.NEXT_PUBLIC_GOOGLE_MAPS_SEARCH_QUERY?.trim() ||
+    `Ercan İnşaat, ${addressLine}`;
+  const directMapsUrl = process.env.NEXT_PUBLIC_GOOGLE_MAPS_URL?.trim();
+  const mapsUrl =
+    directMapsUrl ||
+    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsSearchQuery)}`;
 
   return (
     <main className="flex min-h-[calc(100dvh-4rem)] min-h-[calc(100vh-4rem)] flex-col items-center justify-center bg-gradient-to-b from-navy-950 via-anthracite-950 to-anthracite-950 px-4 py-16 sm:px-6 sm:py-20">
