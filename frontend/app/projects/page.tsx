@@ -6,6 +6,7 @@ import { fetchJson } from "@/lib/api";
 export const metadata: Metadata = {
   title: "Projeler",
   description: "Ercan İnşaat — projeler",
+  alternates: { canonical: "/projects" },
 };
 
 type ProjectRow = {

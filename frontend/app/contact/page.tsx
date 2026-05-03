@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "İletişim",
   description: "Ercan İnşaat — Ayhan Ercan ve ekiple iletişim.",
+  alternates: { canonical: "/contact" },
 };
 
 function instagramHref(handle: string): string {

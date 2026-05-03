@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Kentsel dönüşüm",
   description:
     "Ercan İnşaat — kentsel dönüşümde güven, süreç ve yanıtlar.",
+  alternates: { canonical: "/urban-renewal" },
 };
 
 type FaqRow = {

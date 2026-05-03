@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Ayhan Ercan — medya",
   description:
     "Ercan İnşaat — Ayhan Ercan’dan şantiye notları, tebrikler ve duyurular.",
+  alternates: { canonical: "/media" },
 };
 
 type Announcement = {

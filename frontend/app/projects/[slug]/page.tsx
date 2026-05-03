@@ -23,9 +23,20 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  const pagePath = `/projects/${slug}`;
   const project = await fetchJson<ProjectDetail>(`/api/projects/${slug}/`);
-  if (!project) return { title: "Proje" };
-  return { title: project.title, description: project.summary };
+  if (!project) return { title: "Proje", alternates: { canonical: pagePath } };
+  return {
+    title: project.title,
+    description: project.summary,
+    alternates: { canonical: pagePath },
+    openGraph: {
+      type: "article",
+      title: project.title,
+      description: project.summary,
+      url: pagePath,
+    },
+  };
 }
 
 export default async function ProjectDetailPage({
