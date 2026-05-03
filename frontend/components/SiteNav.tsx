@@ -226,8 +226,8 @@ export function SiteNav() {
                 ref={logoAnchorRef}
                 src="/logo.png"
                 alt="Ercan İnşaat"
-                width={300}
-                height={64}
+                width={604}
+                height={413}
                 className={`w-auto object-contain transition-all duration-400 ${
                   scrolled
                     ? "h-11 max-h-11 max-w-[min(250px,62vw)] sm:h-12 sm:max-h-12 lg:h-12 lg:max-h-12 lg:max-w-[min(290px,44vw)]"
