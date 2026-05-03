@@ -17,6 +17,10 @@ export default function ContactPage() {
   const igHandle = process.env.NEXT_PUBLIC_INSTAGRAM_HANDLE || "ayhanerc";
   const igUrl =
     process.env.NEXT_PUBLIC_INSTAGRAM_URL || instagramHref(igHandle);
+  const addressLine =
+    process.env.NEXT_PUBLIC_CONTACT_ADDRESS?.trim() ||
+    "Nine Hatun, İnönü Cd. No:31, 34220 Esenler/İstanbul";
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressLine)}`;
 
   return (
     <main className="flex min-h-[calc(100dvh-4rem)] min-h-[calc(100vh-4rem)] flex-col items-center justify-center bg-gradient-to-b from-navy-950 via-anthracite-950 to-anthracite-950 px-4 py-16 sm:px-6 sm:py-20">
@@ -30,9 +34,21 @@ export default function ContactPage() {
         <p className="mt-4 text-sm leading-relaxed text-anthracite-400">
           Bize belirtilen iletişim bilgileri ile ulaşabilirsiniz.
         </p>
-        <p className="mt-3 text-xs leading-relaxed text-anthracite-500">
-          Nine Hatun, İnönü Cd. No:31, 34220 Esenler/İstanbul
-        </p>
+        <a
+          href={mapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Adres: ${addressLine}. Google Haritalarda göster`}
+          className="group mt-5 inline-flex max-w-md cursor-pointer flex-col items-center gap-1.5 rounded-sm border border-transparent px-2 py-1 text-center transition hover:border-gold-500/20 hover:bg-navy-950/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/55"
+        >
+          <span className="text-sm font-medium leading-snug tracking-wide text-anthracite-100 underline decoration-gold-500/35 decoration-1 underline-offset-[5px] transition group-hover:text-gold-100 group-hover:decoration-gold-400/80 sm:text-[0.95rem] sm:leading-relaxed">
+            {addressLine}
+          </span>
+          <span className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-gold-500/90 transition group-hover:text-gold-300">
+            <MapPinIcon className="h-3 w-3 shrink-0 opacity-90" aria-hidden />
+            Haritada aç
+          </span>
+        </a>
 
         <div className="mt-10 flex w-full max-w-sm flex-col items-center gap-6 sm:mt-12 sm:max-w-none sm:gap-8">
           <a
@@ -58,6 +74,24 @@ export default function ContactPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+function MapPinIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M12 21c-4-3.73-8-8.26-8-11a8 8 0 0 1 16 0c0 2.74-4 7.27-8 11z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
   );
 }
 

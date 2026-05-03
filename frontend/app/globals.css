@@ -17,6 +17,30 @@ body {
   padding-right: env(safe-area-inset-right, 0);
 }
 
+/* Thin, dark scrollbars (Firefox + WebKit) */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(55 58 72 / 0.95) rgb(10 12 20 / 0.98);
+}
+
+*::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgb(10 12 20 / 0.95);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgb(48 52 68 / 0.98);
+  border-radius: 9999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgb(72 76 94 / 1);
+}
+
 /* Flex/grid children need min-w-0 to allow text truncation / shrink on narrow screens */
 main {
   @apply min-w-0;
