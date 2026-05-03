@@ -47,9 +47,9 @@ export function HomeHero({ heroVideoUrl }: { heroVideoUrl: string }) {
           Ercan İnşaat
         </p>
         <h1 className="max-w-[min(100%,40rem)] font-display text-3xl font-semibold tracking-tight text-anthracite-50 sm:text-4xl md:text-5xl lg:text-6xl">
-          Güven üzerine kuruldu.
+          1986'dan Bugüne
           <br />
-          <span className="text-gold-300/95">Kalıcılık için tasarlandı.</span>
+          <span className="text-gold-300/95">Sağlam Temeller, Güvenli Yuvalar.</span>
         </h1>
         <p className="mt-6 max-w-xl px-1 text-sm leading-relaxed text-anthracite-200 sm:text-base">
           Kurucumuz{" "}

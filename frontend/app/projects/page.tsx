@@ -5,7 +5,7 @@ import { fetchJson } from "@/lib/api";
 
 export const metadata: Metadata = {
   title: "Projeler",
-  description: "Ercan İnşaat — devam eden ve tamamlanan projeler",
+  description: "Ercan İnşaat — projeler",
 };
 
 type ProjectRow = {
@@ -18,13 +18,11 @@ type ProjectRow = {
   featured: boolean;
 };
 
+/** Şimdilik yalnızca devam eden projeler listelenir; tamamlananlar arka planda duruyor. */
 export default async function ProjectsPage() {
   const all = await fetchJson<ProjectRow[]>("/api/projects/");
-
   const ongoing =
     all?.filter((p) => p.status === "ongoing") ?? [];
-  const completed =
-    all?.filter((p) => p.status === "completed") ?? [];
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-navy-950 via-anthracite-950 to-anthracite-950 px-4 pb-20 pt-10 sm:px-6">
@@ -36,84 +34,58 @@ export default async function ProjectsPage() {
           Projeler
         </h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-anthracite-400">
-          Devam eden ve tamamlanan çalışmalarımızdan bir seçki. Ayrıntılar ve
-          görseller için tıklayın.
+          Çalışmalarımızdan bir seçki. Ayrıntılar ve görseller için tıklayın.
         </p>
 
-        {!all?.length ? (
-          <p className="mt-12 rounded-sm border border-navy-800/80 bg-navy-950/40 px-6 py-8 text-sm text-anthracite-400">
-            API’den proje dönmedi. Django arka ucunu çalıştırın ve veri olduğundan
-            emin olun (örneğin{" "}
-            <code className="text-gold-400/90">manage.py seed_demo_data</code>
-            ).
-          </p>
+        {ongoing.length > 0 ? (
+          <ul className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {ongoing.map((p) => (
+              <li key={p.id}>
+                <Link
+                  href={`/projects/${p.slug}`}
+                  className="group block rounded-sm border border-navy-800/80 bg-anthracite-900/30 p-6 shadow-luxury transition hover:border-gold-500/35 hover:bg-navy-950/40"
+                >
+                  {p.featured ? (
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-gold-400">
+                      Öne çıkan
+                    </span>
+                  ) : null}
+                  <h2 className="mt-2 font-display text-lg font-semibold text-anthracite-50 group-hover:text-gold-200">
+                    {p.title}
+                  </h2>
+                  {p.location ? (
+                    <p className="mt-2 text-xs text-anthracite-500">{p.location}</p>
+                  ) : null}
+                  {p.summary ? (
+                    <p className="mt-3 text-sm leading-relaxed text-anthracite-400 line-clamp-3">
+                      {p.summary}
+                    </p>
+                  ) : null}
+                  <span className="mt-4 inline-block text-xs font-medium uppercase tracking-widest text-gold-500/90">
+                    Projeyi görüntüle →
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         ) : (
-          <div className="mt-14 space-y-16">
-            <ProjectSection
-              title="Devam eden"
-              emptyMessage="Henüz devam eden proje yok."
-              projects={ongoing}
-            />
-            <ProjectSection
-              title="Tamamlanan"
-              emptyMessage="Henüz tamamlanan proje yok."
-              projects={completed}
-            />
+          <div className="mt-14 rounded-sm border border-navy-800/80 bg-navy-950/40 px-8 py-14 text-center shadow-luxury">
+            <p className="font-display text-lg font-medium text-anthracite-200">
+              Yakında yüklenecek
+            </p>
+            <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-anthracite-500">
+              Projelerimiz bu sayfada çok yakında yer alacak. Güncel haberler için
+              bizimle iletişime geçebilirsiniz.
+            </p>
+            <Link
+              href="/contact"
+              className="mt-8 inline-flex min-h-11 items-center justify-center rounded-sm border border-gold-500/45 bg-gold-600/10 px-6 py-2.5 text-xs font-semibold uppercase tracking-widest text-gold-200 transition hover:border-gold-400 hover:bg-gold-500/15"
+            >
+              İletişim
+            </Link>
           </div>
         )}
       </div>
     </main>
-  );
-}
-
-function ProjectSection({
-  title,
-  emptyMessage,
-  projects,
-}: {
-  title: string;
-  emptyMessage: string;
-  projects: ProjectRow[];
-}) {
-  return (
-    <section>
-      <h2 className="border-b border-gold-500/25 pb-2 font-display text-xl font-semibold text-anthracite-100">
-        {title}
-      </h2>
-      {projects.length === 0 ? (
-        <p className="mt-4 text-sm text-anthracite-500">{emptyMessage}</p>
-      ) : (
-        <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((p) => (
-            <li key={p.id}>
-              <Link
-                href={`/projects/${p.slug}`}
-                className="group block rounded-sm border border-navy-800/80 bg-anthracite-900/30 p-6 shadow-luxury transition hover:border-gold-500/35 hover:bg-navy-950/40"
-              >
-                {p.featured ? (
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-gold-400">
-                    Öne çıkan
-                  </span>
-                ) : null}
-                <h3 className="mt-2 font-display text-lg font-semibold text-anthracite-50 group-hover:text-gold-200">
-                  {p.title}
-                </h3>
-                {p.location ? (
-                  <p className="mt-2 text-xs text-anthracite-500">{p.location}</p>
-                ) : null}
-                {p.summary ? (
-                  <p className="mt-3 text-sm leading-relaxed text-anthracite-400 line-clamp-3">
-                    {p.summary}
-                  </p>
-                ) : null}
-                <span className="mt-4 inline-block text-xs font-medium uppercase tracking-widest text-gold-500/90">
-                  Projeyi görüntüle →
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
   );
 }
