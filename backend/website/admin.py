@@ -83,7 +83,7 @@ class FounderVideoAdminForm(forms.ModelForm):
 class SiteSettingsAdmin(admin.ModelAdmin):
     form = SiteSettingsAdminForm
     list_display = ("__str__", "updated_at")
-    fields = ("hero_video", "clear_hero_video")
+    fields = ("hero_video", "clear_hero_video", "founder_video_poster_ref")
 
     def has_add_permission(self, request):
         return not SiteSettings.objects.exists()
@@ -136,14 +136,31 @@ class FounderVideoAdmin(admin.ModelAdmin):
     list_filter = ("is_published",)
     search_fields = ("title",)
     ordering = ("sort_order", "id")
-    fields = (
-        "title",
-        "video",
-        "clear_video",
-        "poster",
-        "clear_poster",
-        "sort_order",
-        "is_published",
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "title",
+                    "video",
+                    "clear_video",
+                    "sort_order",
+                    "is_published",
+                ),
+            },
+        ),
+        (
+            "Önizleme (isteğe bağlı)",
+            {
+                "description": (
+                    "Cloudinary’deki bir görselin URL’sini veya public_id’sini yapıştırın — "
+                    "aynı değeri istediğiniz kadar videoda tekrar kullanabilirsiniz. "
+                    "Boş bırakırsanız Site settings’teki varsayılan önizleme (varsa) "
+                    "veya yüklenen görsel kullanılır."
+                ),
+                "fields": ("poster_ref", "poster", "clear_poster"),
+            },
+        ),
     )
 
 

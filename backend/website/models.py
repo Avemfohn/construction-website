@@ -15,6 +15,14 @@ class SiteSettings(models.Model):
         null=True,
         help_text="Cloudinary’e yüklenen MP4 (H.264 önerilir).",
     )
+    founder_video_poster_ref = models.CharField(
+        max_length=512,
+        blank=True,
+        help_text=(
+            "Varsayılan kentsel dönüşüm video önizlemesi: Cloudinary görsel URL’si veya "
+            "public_id. Her videoda ayrı önizleme yoksa bu kullanılır."
+        ),
+    )
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -175,11 +183,20 @@ class FounderVideo(models.Model):
         null=True,
         help_text="Cloudinary’e yüklenen video (tercihen MP4 / tarayıcı uyumlu).",
     )
+    poster_ref = models.CharField(
+        max_length=512,
+        blank=True,
+        verbose_name="Preview image URL or public_id",
+        help_text=(
+            "Cloudinary’deki görselin tam URL’si veya public_id. "
+            "Aynı değeri birden fazla videoda kullanabilirsiniz (ortak önizleme)."
+        ),
+    )
     poster = CloudinaryField(
         "image",
         blank=True,
         null=True,
-        help_text="Oynatılmadan önce görünen önizleme görseli (16:9 önerilir).",
+        help_text="İsteğe bağlı: önizlemi admin’den yükleyin (URL alanı yerine veya onun üzerine yazar).",
     )
     sort_order = models.PositiveIntegerField(default=0)
     is_published = models.BooleanField(default=True)

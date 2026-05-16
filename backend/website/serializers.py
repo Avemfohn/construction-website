@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from .cloudinary_media import resolve_cloudinary_image_reference
 from .models import Announcement, FAQ, FounderVideo, Project, ProjectImage, SiteSettings
 
 
@@ -144,7 +145,16 @@ class FounderVideoPublicSerializer(serializers.ModelSerializer):
         return _cloudinary_media_url(self.context.get("request"), obj.video)
 
     def get_poster_url(self, obj):
-        return _cloudinary_media_url(self.context.get("request"), obj.poster)
+        uploaded = _cloudinary_media_url(self.context.get("request"), obj.poster)
+        if uploaded:
+            return uploaded
+        from_ref = resolve_cloudinary_image_reference(obj.poster_ref)
+        if from_ref:
+            return from_ref
+        settings = SiteSettings.objects.filter(pk=1).first()
+        if settings:
+            return resolve_cloudinary_image_reference(settings.founder_video_poster_ref)
+        return None
 
 
 class SiteSettingsPublicSerializer(serializers.ModelSerializer):
