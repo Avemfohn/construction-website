@@ -61,6 +61,10 @@ class FounderVideoAdminForm(forms.ModelForm):
         required=False,
         label="Remove video from Cloudinary",
     )
+    clear_poster = forms.BooleanField(
+        required=False,
+        label="Remove preview image from Cloudinary",
+    )
 
     class Meta:
         model = FounderVideo
@@ -70,6 +74,8 @@ class FounderVideoAdminForm(forms.ModelForm):
         cleaned = super().clean()
         if cleaned.get("clear_video") and not isinstance(cleaned.get("video"), UploadedFile):
             cleaned["video"] = None
+        if cleaned.get("clear_poster") and not isinstance(cleaned.get("poster"), UploadedFile):
+            cleaned["poster"] = None
         return cleaned
 
 
@@ -130,7 +136,15 @@ class FounderVideoAdmin(admin.ModelAdmin):
     list_filter = ("is_published",)
     search_fields = ("title",)
     ordering = ("sort_order", "id")
-    fields = ("title", "video", "clear_video", "sort_order", "is_published")
+    fields = (
+        "title",
+        "video",
+        "clear_video",
+        "poster",
+        "clear_poster",
+        "sort_order",
+        "is_published",
+    )
 
 
 @admin.register(FAQ)

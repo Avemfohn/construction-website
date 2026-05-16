@@ -134,13 +134,17 @@ class FounderVideoPublicSerializer(serializers.ModelSerializer):
     """Public read: HTTPS URL from Cloudinary."""
 
     video_url = serializers.SerializerMethodField()
+    poster_url = serializers.SerializerMethodField()
 
     class Meta:
         model = FounderVideo
-        fields = ("id", "title", "video_url", "sort_order")
+        fields = ("id", "title", "video_url", "poster_url", "sort_order")
 
     def get_video_url(self, obj):
         return _cloudinary_media_url(self.context.get("request"), obj.video)
+
+    def get_poster_url(self, obj):
+        return _cloudinary_media_url(self.context.get("request"), obj.poster)
 
 
 class SiteSettingsPublicSerializer(serializers.ModelSerializer):

@@ -175,6 +175,12 @@ class FounderVideo(models.Model):
         null=True,
         help_text="Cloudinary’e yüklenen video (tercihen MP4 / tarayıcı uyumlu).",
     )
+    poster = CloudinaryField(
+        "image",
+        blank=True,
+        null=True,
+        help_text="Oynatılmadan önce görünen önizleme görseli (16:9 önerilir).",
+    )
     sort_order = models.PositiveIntegerField(default=0)
     is_published = models.BooleanField(default=True)
     updated_at = models.DateTimeField(auto_now=True)

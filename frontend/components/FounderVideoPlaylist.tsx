@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { FounderVideoPlayer } from "@/components/FounderVideoPlayer";
 import type { FounderVideoItem } from "@/components/FounderVideos";
 
 export function FounderVideoPlaylist({ videos }: { videos: FounderVideoItem[] }) {
@@ -12,16 +13,7 @@ export function FounderVideoPlaylist({ videos }: { videos: FounderVideoItem[] })
     <div className="mt-8">
       <div className="overflow-hidden rounded-sm border border-navy-800/80 shadow-luxury">
         <div className="aspect-video w-full bg-navy-950">
-          <video
-            key={active.id}
-            className="h-full w-full object-contain"
-            controls
-            playsInline
-            preload="metadata"
-            title={active.title || "Ayhan Ercan — soru ve cevap"}
-          >
-            <source src={active.video_url!} />
-          </video>
+          <FounderVideoPlayer key={active.id} item={active} />
         </div>
         {active.title ? (
           <p className="border-t border-navy-800/80 bg-navy-950/50 px-4 py-3 text-sm font-medium text-anthracite-100">

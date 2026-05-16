@@ -53,6 +53,7 @@ def founder_video_cloudinary_pre_save(sender, instance, **kwargs):
     except FounderVideo.DoesNotExist:
         return
     destroy_replaced_cloudinary(old.video, instance.video, default_resource_type="video")
+    destroy_replaced_cloudinary(old.poster, instance.poster, default_resource_type="image")
 
 
 @receiver(post_delete, sender=ProjectImage)
@@ -69,3 +70,4 @@ def delete_announcement_media_from_cloudinary(sender, instance, **kwargs):
 @receiver(post_delete, sender=FounderVideo)
 def delete_founder_video_from_cloudinary(sender, instance, **kwargs):
     destroy_cloudinary_stored(instance.video, default_resource_type="video")
+    destroy_cloudinary_stored(instance.poster, default_resource_type="image")

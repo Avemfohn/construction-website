@@ -25,6 +25,7 @@ export default async function UrbanRenewalPage() {
   const founderVideos: FounderVideoItem[] = founderVideosRaw.map((row) => ({
     ...row,
     video_url: rewriteForBrowser(row.video_url) ?? row.video_url,
+    poster_url: rewriteForBrowser(row.poster_url) ?? row.poster_url,
   }));
   const urban = (await fetchJson<FaqRow[]>("/api/faqs/?section=urban_renewal")) ?? [];
   const general = (await fetchJson<FaqRow[]>("/api/faqs/?section=general")) ?? [];

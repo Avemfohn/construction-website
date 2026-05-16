@@ -1,9 +1,11 @@
 import { FounderVideoPlaylist } from "@/components/FounderVideoPlaylist";
+import { FounderVideoPlayer } from "@/components/FounderVideoPlayer";
 
 export type FounderVideoItem = {
   id: number;
   title: string;
   video_url: string | null;
+  poster_url: string | null;
   sort_order: number;
 };
 
@@ -37,15 +39,7 @@ export function FounderVideos({ videos }: { videos: FounderVideoItem[] }) {
             </p>
           ) : null}
           <div className="aspect-video w-full bg-navy-950">
-            <video
-              className="h-full w-full object-contain"
-              controls
-              playsInline
-              preload="metadata"
-              title={items[0].title || "Ayhan Ercan — soru ve cevap"}
-            >
-              <source src={items[0].video_url!} />
-            </video>
+            <FounderVideoPlayer item={items[0]} />
           </div>
         </div>
       ) : (
