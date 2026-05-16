@@ -1,3 +1,5 @@
+import { FounderVideoPlaylist } from "@/components/FounderVideoPlaylist";
+
 export type FounderVideoItem = {
   id: number;
   title: string;
@@ -17,38 +19,37 @@ export function FounderVideos({ videos }: { videos: FounderVideoItem[] }) {
       <h2 className="font-display text-xl font-semibold text-anthracite-100">
         Ayhan Ercan — soru &amp; cevap
       </h2>
+      {items.length > 1 ? (
+        <p className="mt-2 text-sm text-anthracite-500">
+          Bir videoyu seçin; oynatıcıda izleyin.
+        </p>
+      ) : null}
 
       {items.length === 0 ? (
         <div className="mt-6 rounded-sm border border-dashed border-gold-500/30 bg-navy-950/40 px-5 py-8 text-center text-sm text-anthracite-500">
-          <p>
-            Henüz yayınlanmış video yok.{" "}
-          </p>
+          <p>Henüz yayınlanmış video yok.</p>
+        </div>
+      ) : items.length === 1 ? (
+        <div className="mt-8 overflow-hidden rounded-sm border border-navy-800/80 shadow-luxury">
+          {items[0].title ? (
+            <p className="border-b border-navy-800/80 bg-navy-950/50 px-4 py-3 text-sm font-medium text-anthracite-100">
+              {items[0].title}
+            </p>
+          ) : null}
+          <div className="aspect-video w-full bg-navy-950">
+            <video
+              className="h-full w-full object-contain"
+              controls
+              playsInline
+              preload="metadata"
+              title={items[0].title || "Ayhan Ercan — soru ve cevap"}
+            >
+              <source src={items[0].video_url!} />
+            </video>
+          </div>
         </div>
       ) : (
-        <ul className="mt-8 space-y-10">
-          {items.map((row) => (
-            <li key={row.id}>
-              {row.title ? (
-                <p className="mb-2 text-sm font-medium text-anthracite-200">
-                  {row.title}
-                </p>
-              ) : null}
-              <div className="overflow-hidden rounded-sm border border-navy-800/80 shadow-luxury">
-                <div className="aspect-video w-full max-w-full bg-navy-950">
-                  <video
-                    className="h-full w-full max-w-full object-contain"
-                    controls
-                    playsInline
-                    preload="metadata"
-                    title={row.title || "Ayhan Ercan — soru ve cevap"}
-                  >
-                    <source src={row.video_url!} />
-                  </video>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <FounderVideoPlaylist videos={items} />
       )}
     </section>
   );
