@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from website.models import Announcement, FAQ, Project
+from website.models import Announcement, FAQ, Project, ProjectUpdate
 
 
 class Command(BaseCommand):
@@ -38,6 +38,20 @@ class Command(BaseCommand):
 
         # Galeri görselleri artık Cloudinary — yerel dosya yolu kullanılmaz.
         # Projeler oluşturulduktan sonra Django yönetiminden Project images ekleyin.
+
+        ProjectUpdate.objects.update_or_create(
+            project=p1,
+            title="Karot numunesi alındı",
+            defaults={
+                "body": (
+                    "Şantiyede çekirdek (karot) örneği alındı. Numuneler laboratuvara "
+                    "gönderildi; taşıyıcı sistem değerlendirmesi için sonuçlar bekleniyor. "
+                    "Fotoğraf ve videoları bu güncellemeye Django yönetiminden ekleyebilirsiniz."
+                ),
+                "is_published": True,
+                "sort_order": 0,
+            },
+        )
 
         Announcement.objects.update_or_create(
             title="Ayhan Ercan — şantiye notu (12. hafta)",

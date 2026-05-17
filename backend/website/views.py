@@ -1,9 +1,9 @@
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Announcement, FAQ, FounderVideo, Project, SiteSettings
+from .models import Announcement, FAQ, FounderVideo, Project, ProjectUpdate, SiteSettings
 from .serializers import (
     AnnouncementSerializer,
     FAQSerializer,
@@ -32,6 +32,16 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
         status = self.request.query_params.get("status")
         if status in ("ongoing", "completed"):
             qs = qs.filter(status=status)
+        if self.action == "retrieve":
+            qs = qs.prefetch_related(
+                "images",
+                Prefetch(
+                    "updates",
+                    queryset=ProjectUpdate.objects.filter(is_published=True).prefetch_related(
+                        "media"
+                    ),
+                ),
+            )
         return qs
 
 

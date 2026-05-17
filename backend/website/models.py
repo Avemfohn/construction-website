@@ -1,4 +1,6 @@
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from cloudinary.models import CloudinaryField
 
 
@@ -102,6 +104,76 @@ class ProjectImage(models.Model):
 
     def __str__(self) -> str:
         return f"{self.project.title} — {self.pk}"
+
+
+class ProjectUpdate(models.Model):
+    """Dated construction progress post for a single project."""
+
+    project = models.ForeignKey(
+        Project,
+        related_name="updates",
+        on_delete=models.CASCADE,
+    )
+    title = models.CharField(max_length=255)
+    body = models.TextField(blank=True)
+    is_published = models.BooleanField(default=True)
+    published_at = models.DateTimeField(default=timezone.now)
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["-published_at", "sort_order", "-id"]
+        verbose_name = "Project update"
+        verbose_name_plural = "Project updates"
+
+    def __str__(self) -> str:
+        return f"{self.project.title} — {self.title}"
+
+
+class ProjectUpdateMedia(models.Model):
+    """Photo or video attached to a project update (one asset per row)."""
+
+    update = models.ForeignKey(
+        ProjectUpdate,
+        related_name="media",
+        on_delete=models.CASCADE,
+    )
+    image = CloudinaryField(
+        "image",
+        blank=True,
+        null=True,
+        help_text="Cloudinary’e yüklenen görsel (video ile birlikte kullanmayın).",
+    )
+    video = CloudinaryField(
+        "video",
+        resource_type="video",
+        blank=True,
+        null=True,
+        help_text="Cloudinary’e yüklenen video (görsel ile birlikte kullanmayın).",
+    )
+    caption = models.CharField(max_length=255, blank=True)
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order", "id"]
+        verbose_name = "Project update media"
+        verbose_name_plural = "Project update media"
+
+    def __str__(self) -> str:
+        kind = "video" if self.video else "image"
+        return f"{self.update} — {kind} #{self.pk}"
+
+    def clean(self):
+        super().clean()
+        has_image = bool(self.image)
+        has_video = bool(self.video)
+        if has_image == has_video:
+            raise ValidationError(
+                "Her medya satırında ya bir görsel ya da bir video olmalıdır (ikisi birden veya hiçbiri olamaz)."
+            )
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
 
 class Announcement(models.Model):

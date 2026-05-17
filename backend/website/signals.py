@@ -5,7 +5,13 @@ from website.cloudinary_cleanup import (
     destroy_cloudinary_stored,
     destroy_replaced_cloudinary,
 )
-from website.models import Announcement, FounderVideo, ProjectImage, SiteSettings
+from website.models import (
+    Announcement,
+    FounderVideo,
+    ProjectImage,
+    ProjectUpdateMedia,
+    SiteSettings,
+)
 
 
 @receiver(pre_save, sender=SiteSettings)
@@ -59,6 +65,24 @@ def founder_video_cloudinary_pre_save(sender, instance, **kwargs):
 @receiver(post_delete, sender=ProjectImage)
 def delete_project_image_from_cloudinary(sender, instance, **kwargs):
     destroy_cloudinary_stored(instance.image, default_resource_type="image")
+
+
+@receiver(pre_save, sender=ProjectUpdateMedia)
+def project_update_media_cloudinary_pre_save(sender, instance, **kwargs):
+    if not instance.pk:
+        return
+    try:
+        old = ProjectUpdateMedia.objects.get(pk=instance.pk)
+    except ProjectUpdateMedia.DoesNotExist:
+        return
+    destroy_replaced_cloudinary(old.image, instance.image, default_resource_type="image")
+    destroy_replaced_cloudinary(old.video, instance.video, default_resource_type="video")
+
+
+@receiver(post_delete, sender=ProjectUpdateMedia)
+def delete_project_update_media_from_cloudinary(sender, instance, **kwargs):
+    destroy_cloudinary_stored(instance.image, default_resource_type="image")
+    destroy_cloudinary_stored(instance.video, default_resource_type="video")
 
 
 @receiver(post_delete, sender=Announcement)

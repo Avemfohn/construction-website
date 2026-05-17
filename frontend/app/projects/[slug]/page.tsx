@@ -3,6 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ProjectGallery } from "@/components/ProjectGallery";
+import {
+  ProjectUpdateTimeline,
+  type ProjectUpdate,
+} from "@/components/ProjectUpdateTimeline";
 import { fetchJson } from "@/lib/api";
 
 type ProjectDetail = {
@@ -15,6 +19,7 @@ type ProjectDetail = {
   location: string;
   features: string[];
   images: { id: number; image: string | null; caption: string; sort_order: number }[];
+  updates: ProjectUpdate[];
 };
 
 export async function generateMetadata({
@@ -104,6 +109,11 @@ export default async function ProjectDetailPage({
           {galleryImages.length > 0 ? (
             <ProjectGallery title={project.title} images={galleryImages} />
           ) : null}
+
+          <ProjectUpdateTimeline
+            updates={project.updates ?? []}
+            projectStatus={project.status}
+          />
         </div>
       </main>
   );

@@ -2,7 +2,16 @@ from django import forms
 from django.contrib import admin
 from django.core.files.uploadedfile import UploadedFile
 
-from .models import Announcement, FAQ, FounderVideo, Project, ProjectImage, SiteSettings
+from .models import (
+    Announcement,
+    FAQ,
+    FounderVideo,
+    Project,
+    ProjectImage,
+    ProjectUpdate,
+    ProjectUpdateMedia,
+    SiteSettings,
+)
 
 admin.site.site_header = "Ercan İnşaat"
 admin.site.site_title = "Ercan İnşaat"
@@ -97,13 +106,55 @@ class ProjectImageInline(admin.TabularInline):
     extra = 0
 
 
+class ProjectUpdateMediaInlineForm(forms.ModelForm):
+    class Meta:
+        model = ProjectUpdateMedia
+        fields = ("image", "video", "caption", "sort_order")
+
+    def clean(self):
+        cleaned = super().clean()
+        if cleaned.get("DELETE"):
+            return cleaned
+        has_image = bool(cleaned.get("image"))
+        has_video = bool(cleaned.get("video"))
+        if has_image == has_video:
+            raise forms.ValidationError(
+                "Her satırda ya bir görsel ya da bir video yükleyin (ikisi birden veya hiçbiri olamaz)."
+            )
+        return cleaned
+
+
+class ProjectUpdateMediaInline(admin.TabularInline):
+    model = ProjectUpdateMedia
+    form = ProjectUpdateMediaInlineForm
+    extra = 1
+    fields = ("image", "video", "caption", "sort_order")
+
+
+class ProjectUpdateInline(admin.StackedInline):
+    model = ProjectUpdate
+    extra = 0
+    show_change_link = True
+    fields = ("title", "body", "is_published", "published_at", "sort_order")
+
+
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ("title", "status", "featured", "sort_order", "updated_at")
     list_filter = ("status", "featured")
     prepopulated_fields = {"slug": ("title",)}
     search_fields = ("title", "location", "summary")
-    inlines = [ProjectImageInline]
+    inlines = [ProjectImageInline, ProjectUpdateInline]
+
+
+@admin.register(ProjectUpdate)
+class ProjectUpdateAdmin(admin.ModelAdmin):
+    list_display = ("title", "project", "is_published", "published_at", "sort_order")
+    list_filter = ("is_published", "project")
+    search_fields = ("title", "body", "project__title")
+    date_hierarchy = "published_at"
+    inlines = [ProjectUpdateMediaInline]
+    fields = ("project", "title", "body", "is_published", "published_at", "sort_order")
 
 
 @admin.register(ProjectImage)

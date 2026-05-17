@@ -1,7 +1,16 @@
 from rest_framework import serializers
 
 from .cloudinary_media import resolve_cloudinary_image_reference
-from .models import Announcement, FAQ, FounderVideo, Project, ProjectImage, SiteSettings
+from .models import (
+    Announcement,
+    FAQ,
+    FounderVideo,
+    Project,
+    ProjectImage,
+    ProjectUpdate,
+    ProjectUpdateMedia,
+    SiteSettings,
+)
 
 
 def _cloudinary_media_url(request, field_value) -> str | None:
@@ -47,8 +56,45 @@ class ProjectListSerializer(serializers.ModelSerializer):
         )
 
 
+class ProjectUpdateMediaSerializer(serializers.ModelSerializer):
+    kind = serializers.SerializerMethodField()
+    url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ProjectUpdateMedia
+        fields = ("id", "kind", "url", "caption", "sort_order")
+
+    def get_kind(self, obj):
+        if obj.video:
+            return "video"
+        return "image"
+
+    def get_url(self, obj):
+        field = obj.video if obj.video else obj.image
+        return _cloudinary_media_url(self.context.get("request"), field)
+
+
+class ProjectUpdateSerializer(serializers.ModelSerializer):
+    media = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ProjectUpdate
+        fields = ("id", "title", "body", "published_at", "sort_order", "media")
+
+    def get_media(self, obj):
+        items = []
+        request = self.context.get("request")
+        for row in obj.media.all():
+            ser = ProjectUpdateMediaSerializer(row, context={"request": request})
+            data = ser.data
+            if data.get("url"):
+                items.append(data)
+        return items
+
+
 class ProjectDetailSerializer(serializers.ModelSerializer):
     images = ProjectImageSerializer(many=True, read_only=True)
+    updates = ProjectUpdateSerializer(many=True, read_only=True)
 
     class Meta:
         model = Project
@@ -64,6 +110,7 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
             "featured",
             "sort_order",
             "images",
+            "updates",
             "created_at",
             "updated_at",
         )
