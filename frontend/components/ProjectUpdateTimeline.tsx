@@ -6,6 +6,7 @@ export type ProjectUpdateMedia = {
   id: number;
   kind: "image" | "video";
   url: string;
+  poster_url: string | null;
   caption: string;
   sort_order: number;
 };
@@ -42,6 +43,9 @@ export function ProjectUpdateTimeline({
     media: row.media.map((m) => ({
       ...m,
       url: rewriteForBrowser(m.url) ?? m.url,
+      poster_url: m.poster_url
+        ? (rewriteForBrowser(m.poster_url) ?? m.poster_url)
+        : m.poster_url,
     })),
   }));
 

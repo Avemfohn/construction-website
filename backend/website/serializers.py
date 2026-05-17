@@ -1,6 +1,9 @@
 from rest_framework import serializers
 
-from .cloudinary_media import resolve_cloudinary_image_reference
+from .cloudinary_media import (
+    resolve_cloudinary_image_reference,
+    resolve_project_update_video_poster_url,
+)
 from .models import (
     Announcement,
     FAQ,
@@ -59,10 +62,11 @@ class ProjectListSerializer(serializers.ModelSerializer):
 class ProjectUpdateMediaSerializer(serializers.ModelSerializer):
     kind = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
+    poster_url = serializers.SerializerMethodField()
 
     class Meta:
         model = ProjectUpdateMedia
-        fields = ("id", "kind", "url", "caption", "sort_order")
+        fields = ("id", "kind", "url", "poster_url", "caption", "sort_order")
 
     def get_kind(self, obj):
         if obj.video:
@@ -72,6 +76,11 @@ class ProjectUpdateMediaSerializer(serializers.ModelSerializer):
     def get_url(self, obj):
         field = obj.video if obj.video else obj.image
         return _cloudinary_media_url(self.context.get("request"), field)
+
+    def get_poster_url(self, obj):
+        if not obj.video:
+            return None
+        return resolve_project_update_video_poster_url(obj.poster_ref)
 
 
 class ProjectUpdateSerializer(serializers.ModelSerializer):

@@ -109,7 +109,7 @@ class ProjectImageInline(admin.TabularInline):
 class ProjectUpdateMediaInlineForm(forms.ModelForm):
     class Meta:
         model = ProjectUpdateMedia
-        fields = ("image", "video", "caption", "sort_order")
+        fields = ("image", "video", "poster_ref", "caption", "sort_order")
 
     def clean(self):
         cleaned = super().clean()
@@ -128,7 +128,7 @@ class ProjectUpdateMediaInline(admin.TabularInline):
     model = ProjectUpdateMedia
     form = ProjectUpdateMediaInlineForm
     extra = 1
-    fields = ("image", "video", "caption", "sort_order")
+    fields = ("image", "video", "poster_ref", "caption", "sort_order")
 
 
 class ProjectUpdateInline(admin.StackedInline):

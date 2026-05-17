@@ -150,6 +150,14 @@ class ProjectUpdateMedia(models.Model):
         null=True,
         help_text="Cloudinary’e yüklenen video (görsel ile birlikte kullanmayın).",
     )
+    poster_ref = models.CharField(
+        max_length=512,
+        blank=True,
+        help_text=(
+            "Video önizleme görseli: Cloudinary public_id veya URL. "
+            "Boş bırakırsanız varsayılan önizleme kullanılır (dgppgkttceva7syh0t4h)."
+        ),
+    )
     caption = models.CharField(max_length=255, blank=True)
     sort_order = models.PositiveIntegerField(default=0)
 

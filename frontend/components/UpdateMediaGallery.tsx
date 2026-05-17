@@ -87,7 +87,8 @@ export function UpdateMediaGallery({
                       className="h-full w-full object-contain"
                       controls
                       playsInline
-                      preload="metadata"
+                      preload={item.poster_url ? "none" : "metadata"}
+                      poster={item.poster_url ?? undefined}
                       title={item.caption || title}
                     >
                       <source src={item.url} type="video/mp4" />
